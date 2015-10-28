@@ -14,8 +14,8 @@ $(document).ready(function() {
 <div class="message-error">
   <p>{$data.error}</p>  
   {if $locale_not_found}
-    <form action={concat('classtools/compare/', $request_id)ezurl()} method="post">
-        <input type="submit" name="InstallButton" value="Installa classe {$request_id}" class="defaultbutton" />                                
+    <form action={concat('classtools/compare/', $request_id, $remote_request_suffix)ezurl()} method="post">
+        <input type="submit" name="InstallButton" value="Installa classe {$request_id}" class="defaultbutton" />
     </form>
   {/if}
 </div>

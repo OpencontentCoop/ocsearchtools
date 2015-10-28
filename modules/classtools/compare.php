@@ -1,26 +1,38 @@
 <?php
-
+/** @var eZModule $module */
 $module = $Params['Module'];
 $id = $Params['ID'];
 $http = eZHTTPTool::instance();
 $tpl = eZTemplate::factory();
 $format = 'ez';
 $action = false;
-if ( isset( $_GET['format'] ) )
+if ( $http->hasVariable( 'format' ) )
 {
-    $format = $_GET['format'];
+    $format = $http->variable( 'format' );
 }
+
+$remoteRequest = false;
+$remoteRequestUrl = null;
+$remoteRequestSuffix = false;
+if ( $http->hasVariable( 'remote' ) )
+{
+    $remoteRequest = $http->variable( 'remote' );
+    $remoteRequestUrl = rtrim( $remoteRequest, '/' ) . '/classtools/definition/';
+    $remoteRequestSuffix = '?remote=' . $remoteRequest;
+}
+
+$remote = null;
 
 try
 {
     if ( $module->isCurrentAction( 'Install' ) )
     {        
-        $tools = new OCClassTools( $id, true );
+        $tools = new OCClassTools( $id, true, array(), $remoteRequestUrl );
         $tools->sync();
-        return $module->redirectTo( '/classtools/class/' . $id );
+        return $module->redirectTo( '/classtools/class/' . $id . $remoteRequestSuffix );
     }
     
-    $tools = new OCClassTools( $id );
+    $tools = new OCClassTools( $id, false, array(), $remoteRequestUrl );
     
     $remote = $tools->getRemote();
     $locale = $tools->getLocale();    
@@ -42,7 +54,7 @@ try
             $removeExtra = $http->postVariable( 'RemoveExtra' ) == 1;
         }
         $tools->sync( $force, $removeExtra );
-        $module->redirectTo( '/openpa/class/' . $id );
+        return $module->redirectTo( '/openpa/class/' . $id . $remoteRequestSuffix );
     }
     
     $tools->compare();
@@ -95,9 +107,10 @@ if ( $format == 'json' )
 }
 else
 {
+    $tpl->setVariable( 'remote_request_suffix', $remoteRequestSuffix );
     $tpl->setVariable( 'request_id', $id );
-    $tpl->setVariable( 'locale_not_found', empty( $id ) ? false : true );    
-    if ( eZContentClass::fetchByIdentifier( $id ) || eZContentClass::fetch( intval( $id ) ) )
+    $tpl->setVariable( 'locale_not_found', empty( $id ) ? false : true );
+    if ( $remote !== null  && ( eZContentClass::fetchByIdentifier( $id ) || eZContentClass::fetch( intval( $id ) ) ) )
     {
         $tpl->setVariable( 'locale_not_found', false );
     }
