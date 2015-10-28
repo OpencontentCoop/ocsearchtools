@@ -466,22 +466,40 @@ class OCClassTools
      */
     protected static function fetchRemoteByIdentifier( $identifier )
     {
-        $currentUrl = eZINI::instance()->variable( 'SiteSettings', 'SiteURL' );
-        $originalRepositoryUrl = self::$remoteUrl . $identifier;        
-        if ( stripos( $originalRepositoryUrl, $currentUrl ) === false )
+        if ( is_object( self::$remoteUrl ) )
         {
-            $original = json_decode( eZHTTPTool::getDataByURL( $originalRepositoryUrl ) );            
-            if ( isset( $original->error ) )
-            {
-                throw new Exception( $original->error );
-            }
-
-            return $original;             
+            $original = self::$remoteUrl;
+        }
+        elseif ( file_exists( self::$remoteUrl ) )
+        {
+            $data = file_get_contents( self::$remoteUrl );
+            $original = json_decode( $data );
         }
         else
         {
-            throw new Exception( "Server e client non possono coincidere" );   
+            $currentUrl = eZINI::instance()->variable( 'SiteSettings', 'SiteURL' );
+            $originalRepositoryUrl = self::$remoteUrl . $identifier;
+            if ( stripos( $originalRepositoryUrl, $currentUrl ) === false )
+            {
+                $original = json_decode( eZHTTPTool::getDataByURL( $originalRepositoryUrl ) );
+            }
+            else
+            {
+                throw new Exception( "Server e client non possono coincidere" );
+            }
         }
+
+        if ( !is_object( $original) )
+        {
+            throw new Exception( "Classe remota non trovata" );
+        }
+
+        if ( isset( $original->error ) )
+        {
+            throw new Exception( $original->error );
+        }
+
+        return $original;
     }
     
     protected function compareProperties( $remote = null )

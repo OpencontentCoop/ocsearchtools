@@ -17,8 +17,16 @@ $remoteRequestSuffix = false;
 if ( $http->hasVariable( 'remote' ) )
 {
     $remoteRequest = $http->variable( 'remote' );
-    $remoteRequestUrl = rtrim( $remoteRequest, '/' ) . '/classtools/definition/';
-    $remoteRequestSuffix = '?remote=' . $remoteRequest;
+    if ( file_exists( $remoteRequest ) )
+    {
+        $remoteRequestUrl = $remoteRequest;
+    }
+    elseif( eZHTTPTool::getDataByURL( $remoteRequest ) )
+    {
+        $remoteRequestUrl = rtrim( $remoteRequest, '/' ) . '/classtools/definition/';
+    }
+    if ( $remoteRequestUrl )
+        $remoteRequestSuffix = '?remote=' . $remoteRequest;
 }
 
 $remote = null;
