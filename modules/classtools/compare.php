@@ -37,7 +37,7 @@ try
     {        
         $tools = new OCClassTools( $id, true, array(), $remoteRequestUrl );
         $tools->sync();
-        return $module->redirectTo( '/classtools/class/' . $id . $remoteRequestSuffix );
+        return $module->redirectTo( '/classtools/compare/' . $id . $remoteRequestSuffix );
     }
     
     $tools = new OCClassTools( $id, false, array(), $remoteRequestUrl );
@@ -62,7 +62,7 @@ try
             $removeExtra = $http->postVariable( 'RemoveExtra' ) == 1;
         }
         $tools->sync( $force, $removeExtra );
-        return $module->redirectTo( '/openpa/class/' . $id . $remoteRequestSuffix );
+        return $module->redirectTo( '/classtools/compare/' . $id . $remoteRequestSuffix );
     }
     
     $tools->compare();
