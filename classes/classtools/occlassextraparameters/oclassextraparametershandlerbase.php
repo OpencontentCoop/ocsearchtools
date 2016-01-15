@@ -122,11 +122,6 @@ abstract class OCClassExtraParametersHandlerBase implements OCClassExtraParamete
         }
     }
 
-    protected function getName()
-    {
-        return ucfirst( $this->getIdentifier() );
-    }
-
     protected function classEditTemplateUrl()
     {
         return 'design:classtools/extraparameters/' . $this->getIdentifier() . '/edit_class.tpl';

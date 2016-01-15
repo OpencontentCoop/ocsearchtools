@@ -6,6 +6,8 @@ interface OCClassExtraParametersHandlerInterface
 
     public function getIdentifier();
 
+    public function getName();
+
     public function loadParameters();
 
     public function storeParameters( $data );

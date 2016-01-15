@@ -48,7 +48,7 @@ if ( $classIdentifier )
                     'node_id' => null
                 ),
                 array(
-                    'text' => 'Impostazioni aggiuntive',
+                    'text' => $handler->getName(),
                     'url' => false,
                     'node_id' => null
                 ),

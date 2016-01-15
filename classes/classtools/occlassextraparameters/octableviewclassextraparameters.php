@@ -8,7 +8,7 @@ class OCTableViewClassExtraParameters extends OCClassExtraParametersHandlerBase
         return 'table_view';
     }
 
-    protected function getName()
+    public function getName()
     {
         return "Visualizzazione tabellare";
     }

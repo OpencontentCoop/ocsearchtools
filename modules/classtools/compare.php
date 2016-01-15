@@ -127,26 +127,26 @@ else
     $Result = array();
     $Result['content'] = $tpl->fetch( 'design:classtools/compare.tpl' );
     $Result['node_id'] = 0;
-    $contentInfoArray = array( 'url_alias' => 'classtools/classes' );
+    $contentInfoArray = array( 'url_alias' => 'classtools/classes', 'class_identifier' => null );
     $contentInfoArray['persistent_variable'] = array(
-        'show_path' => true,
-        'site_title' => 'Class tools'
+        'show_path' => true
     );
-    if ( is_array( $tpl->variable( 'persistent_variable' ) ) )
-    {
-        $contentInfoArray['persistent_variable'] = array_merge( $contentInfoArray['persistent_variable'], $tpl->variable( 'persistent_variable' ) );
-    }
     $Result['content_info'] = $contentInfoArray;
     $Result['path'] = array(
         array(
             'text' => 'Informazioni e utilità per le classi',
-            'url' => 'classtools/classes/'
-        ),
-        array(
-            'text' => isset( $locale ) ? $locale->attribute( 'name' ) : '?',
-            'url' => isset( $locale ) ? 'classtools/classes/' . $locale->attribute( 'identifier' ) : false
+            'url' => 'classtools/classes/',
+            'node_id' => null
         )
     );
+    if ( isset( $locale ) )
+    {
+        $Result['path'][] = array(
+            'text' =>  $locale->attribute( 'name' ),
+            'url' => 'classtools/classes/' . $locale->attribute( 'identifier' ),
+            'node_id' => null
+        );
+    }
 }
 
 
