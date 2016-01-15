@@ -35,7 +35,7 @@ class OCTableViewClassExtraParameters extends OCClassExtraParametersHandlerBase
                 return $this->getAttributeIdentifierListByParameter( 'show_label' );
 
             case 'show_empty':
-                return $this->getAttributeIdentifierListByParameter( 'show_empty' );
+                return $this->getAttributeIdentifierListByParameter( 'show_empty', 1, false );
         }
 
         return parent::attribute( $key );

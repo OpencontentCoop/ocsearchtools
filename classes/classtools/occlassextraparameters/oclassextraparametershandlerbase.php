@@ -149,22 +149,21 @@ abstract class OCClassExtraParametersHandlerBase implements OCClassExtraParamete
         return false;
     }
 
-    protected function getAttributeIdentifierListByParameter( $key, $value = 1 )
+    protected function getAttributeIdentifierListByParameter( $key, $value = 1, $returnAllIfEmpty = true )
     {
         $data = array();
-        if ( empty( $this->parameters ) )
+
+        foreach ( $this->parameters as $parameter )
+        {
+            if ( $parameter->attribute( 'key' ) == $key && $parameter->attribute( 'value' ) == $value )
+            {
+                $data[] = $parameter->attribute( 'attribute_identifier' );
+            }
+        }
+
+        if ( empty( $data ) && $returnAllIfEmpty )
         {
             $data = array_keys( $this->classAttributes );
-        }
-        else
-        {
-            foreach ( $this->parameters as $parameter )
-            {
-                if ( $parameter->attribute( 'key' ) == $key && $parameter->attribute( 'value' ) == $value )
-                {
-                    $data[] = $parameter->attribute( 'attribute_identifier' );
-                }
-            }
         }
         return $data;
     }
