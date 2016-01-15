@@ -3,6 +3,12 @@
 {if is_set( $class )}
     <h1><a href={'classtools/classes'|ezurl()}>Classi di contenuto</a> &raquo; {$class.name}</h1>
 
+    {if $show_extra_link}
+        <a href={concat('/classtools/extra/',$class.identifier)|ezurl()}>
+            Impostazioni extra
+        </a>
+    {/if}
+
     <table width="100%" cellspacing="0" cellpadding="0" border="0" class="list">
         <thead>
         <tr>
@@ -38,6 +44,9 @@
                 <th style="vertical-align: middle">Descrizione</th>
                 <th style="vertical-align: middle">Relazioni</th>
                 <th style="vertical-align: middle">JSON</th>
+                {if $show_extra_link}
+                    <th></th>
+                {/if}
             </tr>
         </thead>
         <tbody>
@@ -59,6 +68,13 @@
                         JSON
                     </a>
                 </td>
+                {if $show_extra_link}
+                    <td style="text-align: center">
+                        <a href={concat('/classtools/extra/',$class.identifier)|ezurl()}>
+                            Extra
+                        </a>
+                    </td>
+                {/if}
             </tr>
             {/foreach}
         </tbody>

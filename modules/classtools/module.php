@@ -34,6 +34,12 @@ $ViewList['classes'] = array( 'functions' => array( 'definition' ),
                                 'params' => array( 'Identifier' ),
                                 'unordered_params' => array() );
 
+$ViewList['extra'] = array( 'functions' => array( 'class' ),
+                              'script' => 'extra.php',
+                              'params' => array( 'Identifier' ),
+                              'unordered_params' => array() );
+
+
 $ViewList['relations'] = array( 'functions' => array( 'definition' ),
                                       'script' => 'relations.php',                                      
                                       'params' => array( 'ID' ),

@@ -11,6 +11,9 @@ if ( $classIdentifier )
         $tpl->setVariable( 'class', $class );
     }
 }
+
+$tpl->setVariable( 'show_extra_link', OCClassExtraParametersManager::issetHandlers() );
+
 $Result = array();
 $Result['content'] = $tpl->fetch( 'design:classtools/classes.tpl' );
 $Result['path'] = array( array( 'text' => 'Classi di contenuto' ,
