@@ -21,14 +21,9 @@ $(document).ready(function() {
 </div>
 {else}
     
-    <div class="object-right">
-        <a class="button" href="{concat('exportas/csv/', $locale.identifier, '/1')|ezurl(no)}">Salva oggetti in CSV</a>
-        <a class="button" href="{concat('exportas/xml/', $locale.identifier, '/1')|ezurl(no)}">Salva oggetti in XML</a>
-    </div>
-    
+
     <h1>
-        <a target="_blank" href="{concat('class/view/', $locale.id)|ezurl(no)}">{$locale.name|wash()}</a>
-        <a target="_blank" href="{concat('classlists/list/', $locale.identifier)|ezurl(no)}">[{$locale.object_count} oggetti]</a>        
+        {$locale.name|wash()}
     </h1>
     
 

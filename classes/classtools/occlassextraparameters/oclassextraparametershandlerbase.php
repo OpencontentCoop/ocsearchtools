@@ -25,10 +25,10 @@ abstract class OCClassExtraParametersHandlerBase implements OCClassExtraParamete
         $this->loadParameters();
     }
 
-    public function loadParameters()
+    public function loadParameters( $reload = false )
     {
-        $this->parameters = OCClassExtraParameters::fetchByHandlerAndClassIdentifier( $this->getIdentifier(), $this->class->Identifier );
-        //echo '<pre>';print_r($this->parameters);die();
+        if ( $this->parameters === null || $reload )
+            $this->parameters = (array)OCClassExtraParameters::fetchByHandlerAndClassIdentifier( $this->getIdentifier(), $this->class->Identifier );
     }
 
     public function storeParameters( $data )
@@ -77,7 +77,7 @@ abstract class OCClassExtraParametersHandlerBase implements OCClassExtraParamete
                     }
                 }
             }
-            $this->loadParameters();
+            $this->loadParameters( true );
         }
     }
 

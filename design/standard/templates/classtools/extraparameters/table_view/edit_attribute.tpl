@@ -4,8 +4,6 @@
     @var eZContentClassAttribute $attribute
 *}
 
-<h4>Impostazioni visualizzazione tabellare</h4>
-
 <div class="checkbox">
     <label>
         <input type="checkbox" name="extra_handler_{$handler.identifier}[class_attribute][{$class.identifier}][{$attribute.identifier}][show]" value="1" {if $handler.show|contains($attribute.identifier)}checked="checked"{/if} /> Mostra in visualizzazione tabellare

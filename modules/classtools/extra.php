@@ -3,6 +3,7 @@
 $module = $Params['Module'];
 $tpl = eZTemplate::factory();
 $classIdentifier = $Params['Identifier'];
+$handlerIdentifier = $Params['HandlerIdentifier'];
 $http = eZHTTPTool::instance();
 
 if ( $classIdentifier )
@@ -10,27 +11,58 @@ if ( $classIdentifier )
     $class = eZContentClass::fetchByIdentifier( $classIdentifier );
     if ( $class instanceof eZContentClass )
     {
-        $tpl->setVariable( 'class', $class );
         $extraParametersManager = OCClassExtraParametersManager::instance( $class );
-        $handlers = OCClassExtraParametersManager::currentUserCanEditHandlers() ? $extraParametersManager->getHandlers() : array();
-
-        if ( $http->hasVariable( 'StoreExtraParameters' ) )
+        $handler = $extraParametersManager->getHandler( $handlerIdentifier );
+        if ( $handlerIdentifier && OCClassExtraParametersManager::currentUserCanEditHandlers() && $handler instanceof OCClassExtraParametersHandlerInterface)
         {
-            foreach( $handlers as $identifier => $handler )
+            $tpl->setVariable( 'class', $class );
+            if ( $http->hasVariable( 'StoreExtraParameters' ) )
             {
-                if ( $http->hasVariable( 'extra_handler_' . $identifier ) )
+                if ( $http->hasVariable( 'extra_handler_' . $handlerIdentifier ) )
                 {
-                    $data = $http->variable( 'extra_handler_' . $identifier );
+                    $data = $http->variable( 'extra_handler_' . $handlerIdentifier );
                     $handler->storeParameters( $data );
                 }
+                $module->redirectTo( 'classtools/extra/' . $classIdentifier . '/' . $handlerIdentifier );
             }
-            $module->redirectTo( 'classtools/extra/' . $classIdentifier );
-        }
 
-        $tpl->setVariable( 'extra_handlers', $handlers );
+            $tpl->setVariable( 'handler', $handler );
+
+            $Result = array();
+            $Result['content'] = $tpl->fetch( 'design:classtools/extra.tpl' );
+            $Result['node_id'] = 0;
+            $contentInfoArray = array( 'url_alias' => 'classtools/classes', 'class_identifier' => null );
+            $contentInfoArray['persistent_variable'] = array(
+                'show_path' => true
+            );
+            $Result['content_info'] = $contentInfoArray;
+            $Result['path'] = array(
+                array(
+                    'text' => 'Informazioni e utilità per le classi',
+                    'url' => 'classtools/classes/',
+                    'node_id' => null
+                ),
+                array(
+                    'text' => $class->attribute( 'name' ),
+                    'url' => 'classtools/classes/' . $class->attribute( 'identifier' ),
+                    'node_id' => null
+                ),
+                array(
+                    'text' => 'Impostazioni aggiuntive',
+                    'url' => false,
+                    'node_id' => null
+                ),
+            );
+
+
+        }
+        else
+        {
+            $module->redirectTo( 'classtools/classes/' . $classIdentifier );
+        }
     }
 }
-$Result = array();
-$Result['content'] = $tpl->fetch( 'design:classtools/extra.tpl' );
-$Result['path'] = array( array( 'text' => 'Classi di contenuto' ,
-                                'url' => false ) );
+else
+{
+    $module->redirectTo( 'classtools/classes/' );
+}

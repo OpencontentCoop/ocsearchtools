@@ -123,11 +123,30 @@ else
         $tpl->setVariable( 'locale_not_found', false );
     }
     $tpl->setVariable( 'data', $result );
+
     $Result = array();
     $Result['content'] = $tpl->fetch( 'design:classtools/compare.tpl' );
-    $Result['path'] = array( array( 'text' => 'Classi' ,
-                                    'url' => false ) );
-    
+    $Result['node_id'] = 0;
+    $contentInfoArray = array( 'url_alias' => 'classtools/classes' );
+    $contentInfoArray['persistent_variable'] = array(
+        'show_path' => true,
+        'site_title' => 'Class tools'
+    );
+    if ( is_array( $tpl->variable( 'persistent_variable' ) ) )
+    {
+        $contentInfoArray['persistent_variable'] = array_merge( $contentInfoArray['persistent_variable'], $tpl->variable( 'persistent_variable' ) );
+    }
+    $Result['content_info'] = $contentInfoArray;
+    $Result['path'] = array(
+        array(
+            'text' => 'Informazioni e utilità per le classi',
+            'url' => 'classtools/classes/'
+        ),
+        array(
+            'text' => isset( $locale ) ? $locale->attribute( 'name' ) : '?',
+            'url' => isset( $locale ) ? 'classtools/classes/' . $locale->attribute( 'identifier' ) : false
+        )
+    );
 }
 
 
