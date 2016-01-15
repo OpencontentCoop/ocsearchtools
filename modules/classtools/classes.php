@@ -12,7 +12,7 @@ if ( $classIdentifier )
     }
 }
 
-$tpl->setVariable( 'show_extra_link', OCClassExtraParametersManager::issetHandlers() );
+$tpl->setVariable( 'show_extra_link', OCClassExtraParametersManager::issetHandlers() && OCClassExtraParametersManager::currentUserCanEditHandlers() );
 
 $Result = array();
 $Result['content'] = $tpl->fetch( 'design:classtools/classes.tpl' );

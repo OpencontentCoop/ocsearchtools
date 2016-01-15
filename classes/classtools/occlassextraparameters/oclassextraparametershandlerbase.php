@@ -33,36 +33,23 @@ abstract class OCClassExtraParametersHandlerBase implements OCClassExtraParamete
 
     public function storeParameters( $data )
     {
-        $classData = isset( $data['class'] ) ? $data['class'] : array();
-        $attributesData = isset( $data['class_attribute'] ) ? $data['class_attribute'] : array();
-
-        OCClassExtraParameters::removeByHandlerAndClassIdentifier( $this->getIdentifier(), $this->class->Identifier );
-
-        foreach( $classData as $classIdentifier => $values )
+        if ( OCClassExtraParametersManager::currentUserCanEditHandlers( $this->getIdentifier() ) )
         {
-            foreach( $values as $key => $value )
-            {
-                $row = array(
-                    'class_identifier' => $classIdentifier,
-                    'attribute_identifier' => '*',
-                    'handler' => $this->getIdentifier(),
-                    'key' => $key,
-                    'value' => $value
-                );
-                $parameter = new OCClassExtraParameters( $row );
-                $parameter->store();
-            }
-        }
+            $classData = isset( $data['class'] ) ? $data['class'] : array();
+            $attributesData = isset( $data['class_attribute'] ) ? $data['class_attribute'] : array();
 
-        foreach( $attributesData as $classIdentifier => $attributesValues )
-        {
-            foreach( $attributesValues as $attributeIdentifier => $values )
+            OCClassExtraParameters::removeByHandlerAndClassIdentifier(
+                $this->getIdentifier(),
+                $this->class->Identifier
+            );
+
+            foreach ( $classData as $classIdentifier => $values )
             {
-                foreach( $values as $key => $value )
+                foreach ( $values as $key => $value )
                 {
                     $row = array(
                         'class_identifier' => $classIdentifier,
-                        'attribute_identifier' => $attributeIdentifier,
+                        'attribute_identifier' => '*',
                         'handler' => $this->getIdentifier(),
                         'key' => $key,
                         'value' => $value
@@ -71,8 +58,27 @@ abstract class OCClassExtraParametersHandlerBase implements OCClassExtraParamete
                     $parameter->store();
                 }
             }
+
+            foreach ( $attributesData as $classIdentifier => $attributesValues )
+            {
+                foreach ( $attributesValues as $attributeIdentifier => $values )
+                {
+                    foreach ( $values as $key => $value )
+                    {
+                        $row = array(
+                            'class_identifier' => $classIdentifier,
+                            'attribute_identifier' => $attributeIdentifier,
+                            'handler' => $this->getIdentifier(),
+                            'key' => $key,
+                            'value' => $value
+                        );
+                        $parameter = new OCClassExtraParameters( $row );
+                        $parameter->store();
+                    }
+                }
+            }
+            $this->loadParameters();
         }
-        $this->loadParameters();
     }
 
     public function attributes()
@@ -123,12 +129,12 @@ abstract class OCClassExtraParametersHandlerBase implements OCClassExtraParamete
 
     protected function classEditTemplateUrl()
     {
-        return 'design:classtools/extraparameters/edit/' . $this->getIdentifier() . '_class.tpl';
+        return 'design:classtools/extraparameters/' . $this->getIdentifier() . '/edit_class.tpl';
     }
 
     protected function attributeEditTemplateUrl()
     {
-        return 'design:classtools/extraparameters/edit/' . $this->getIdentifier() . '_attribute.tpl';
+        return 'design:classtools/extraparameters/' . $this->getIdentifier() . '/edit_attribute.tpl';
     }
 
     protected function getClassParameter( $key )

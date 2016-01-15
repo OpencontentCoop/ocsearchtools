@@ -12,7 +12,7 @@ if ( $classIdentifier )
     {
         $tpl->setVariable( 'class', $class );
         $extraParametersManager = OCClassExtraParametersManager::instance( $class );
-        $handlers = $extraParametersManager->getHandlers();
+        $handlers = OCClassExtraParametersManager::currentUserCanEditHandlers() ? $extraParametersManager->getHandlers() : array();
 
         if ( $http->hasVariable( 'StoreExtraParameters' ) )
         {

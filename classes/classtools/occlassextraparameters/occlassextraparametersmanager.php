@@ -36,7 +36,7 @@ class OCClassExtraParametersManager
         return self::$instances[$class->attribute( 'identifier' )];
     }
 
-    public static function currentUserCanManageHandlers()
+    public static function currentUserCanEditHandlers( $handlerIdentifier = null )
     {
         $access = eZUser::currentUser()->hasAccessTo( 'class' );
         return $access['accessWord'] == 'yes';
@@ -44,7 +44,7 @@ class OCClassExtraParametersManager
 
     public static function issetHandlers()
     {
-        return self::currentUserCanManageHandlers() ? count( eZINI::instance( 'occlassextraparameters.ini' )->variable( 'AvailableHandlers', 'Handlers' ) ) > 0 : false;
+        return count( (array)eZINI::instance( 'occlassextraparameters.ini' )->variable( 'AvailableHandlers', 'Handlers' ) ) > 0;
     }
 
     /**
@@ -52,7 +52,7 @@ class OCClassExtraParametersManager
      */
     public function getHandlers()
     {
-        return self::currentUserCanManageHandlers() ? $this->handlers : array();
+        return $this->handlers;
     }
 
     /**

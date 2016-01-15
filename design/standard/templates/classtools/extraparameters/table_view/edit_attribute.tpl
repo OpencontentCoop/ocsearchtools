@@ -14,7 +14,7 @@
 
 <div class="checkbox">
     <label>
-        <input type="checkbox" name="extra_handler_{$handler.identifier}[class_attribute][{$class.identifier}][{$attribute.identifier}][show_title]" value="1" {if $handler.show_title|contains($attribute.identifier)}checked="checked"{/if} /> Mostra etichetta
+        <input type="checkbox" name="extra_handler_{$handler.identifier}[class_attribute][{$class.identifier}][{$attribute.identifier}][show_label]" value="1" {if $handler.show_label|contains($attribute.identifier)}checked="checked"{/if} /> Mostra etichetta
     </label>
 </div>
 

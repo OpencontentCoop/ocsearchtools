@@ -18,7 +18,7 @@ class OCTableViewClassExtraParameters extends OCClassExtraParametersHandlerBase
         $attributes = parent::attributes();
 
         $attributes[] = 'show';
-        $attributes[] = 'show_title';
+        $attributes[] = 'show_label';
         $attributes[] = 'show_empty';
 
         return $attributes;
@@ -31,8 +31,8 @@ class OCTableViewClassExtraParameters extends OCClassExtraParametersHandlerBase
             case 'show':
                 return $this->getAttributeIdentifierListByParameter( 'show' );
 
-            case 'show_title':
-                return $this->getAttributeIdentifierListByParameter( 'show_title' );
+            case 'show_label':
+                return $this->getAttributeIdentifierListByParameter( 'show_label' );
 
             case 'show_empty':
                 return $this->getAttributeIdentifierListByParameter( 'show_empty' );
