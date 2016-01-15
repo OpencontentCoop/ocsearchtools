@@ -20,6 +20,7 @@ class OCTableViewClassExtraParameters extends OCClassExtraParametersHandlerBase
         $attributes[] = 'show';
         $attributes[] = 'show_label';
         $attributes[] = 'show_empty';
+        $attributes[] = 'collapse_label';
 
         return $attributes;
     }
@@ -36,6 +37,9 @@ class OCTableViewClassExtraParameters extends OCClassExtraParametersHandlerBase
 
             case 'show_empty':
                 return $this->getAttributeIdentifierListByParameter( 'show_empty', 1, false );
+
+            case 'collapse_label':
+                return $this->getAttributeIdentifierListByParameter( 'collapse_label', 1, false );
         }
 
         return parent::attribute( $key );
