@@ -214,7 +214,7 @@ class ocSolrDocumentFieldObjectRelation extends ezfSolrDocumentFieldBase
     
 
     // Get an Array of all sub Attributes
-    protected function getArrayrelatedObject( eZContentObject $relatedObject, $contentClassAttribute, $metaData = null )
+    protected function getArrayRelatedObject( eZContentObject $relatedObject, $contentClassAttribute, $metaData = null )
     {
         if ( $metaData === null )
         {
@@ -237,6 +237,7 @@ class ocSolrDocumentFieldObjectRelation extends ezfSolrDocumentFieldBase
                 $metaData[$fieldName] = array( $objectName );
             }
 
+            /** @var ezfSolrDocumentFieldBase[] $baseList */
             $baseList = $this->getBaseList( $relatedObject->attribute( 'current' ) );
             foreach( $baseList as $field )
             {
@@ -256,6 +257,7 @@ class ocSolrDocumentFieldObjectRelation extends ezfSolrDocumentFieldBase
                 if ( $tmpClassAttribute->attribute( 'data_type_string' ) == 'ezobjectrelation' or
                      $tmpClassAttribute->attribute( 'data_type_string' ) == 'ezobjectrelationlist' )
                 {
+                    /** @var self $field */
                     $finalValue = $field->getPlainTextRepresentation();
                 }
                 else
@@ -355,7 +357,7 @@ class ocSolrDocumentFieldObjectRelation extends ezfSolrDocumentFieldBase
 
                 if ( $relatedObject )
                 {
-                    $returnArray = $this->getArrayrelatedObject( $relatedObject, $contentClassAttribute );
+                    $returnArray = $this->getArrayRelatedObject( $relatedObject, $contentClassAttribute );
                     eZContentObject::clearCache( array( $relatedObject->attribute( 'id' ) ) );
                 }
                 return $returnArray;
@@ -365,6 +367,7 @@ class ocSolrDocumentFieldObjectRelation extends ezfSolrDocumentFieldBase
             case 'ezobjectrelationlist' :
             {
                 $returnArray = array();
+                $returnArrayRelatedObject = array();
                 $content = $this->ContentObjectAttribute->content();
 
                 foreach( $content['relation_list'] as $relationItem )
@@ -444,27 +447,14 @@ class ocSolrDocumentFieldObjectRelation extends ezfSolrDocumentFieldBase
                             }  
                         }
                     }
-                    eZContentObject::clearCache( array( $subContentObject->attribute( 'id' ) ) );
-                }
-                
-                $contentClassAttribute = $this->ContentObjectAttribute->attribute( 'contentclass_attribute' );
-	   
-                $content = $this->ContentObjectAttribute->content();
 
-                $returnArrayRelatedObject = array();
-                
-                foreach( $content['relation_list'] as $relationItem )
-                {
-                    $relatedObject = eZContentObject::fetch( $relationItem['contentobject_id'] );
-            
-                    if ( $relatedObject )
-                    {
-                        $returnArrayRelatedObject = $this->getArrayrelatedObject( $relatedObject,
-                                                                                  $contentClassAttribute,
-                                                                                  $returnArrayRelatedObject);
-                        eZContentObject::clearCache( array( $relationItem['contentobject_id'] ) );
-                    }
+                    $returnArrayRelatedObject = $this->getArrayRelatedObject(
+                        $subContentObject,
+                        $contentClassAttribute,
+                        $returnArrayRelatedObject
+                    );
                     $returnArray = array_merge_recursive( $returnArray, $returnArrayRelatedObject);
+                    eZContentObject::clearCache( array( $subContentObject->attribute( 'id' ) ) );
                 }
                 
                 $defaultFieldName = parent::generateAttributeFieldName( $contentClassAttribute, self::$subattributesDefinition[self::DEFAULT_SUBATTRIBUTE] );
