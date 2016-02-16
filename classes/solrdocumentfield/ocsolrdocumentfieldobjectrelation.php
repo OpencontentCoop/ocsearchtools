@@ -140,8 +140,11 @@ class ocSolrDocumentFieldObjectRelation extends ezfSolrDocumentFieldBase
 
     /**
      * @see ezfSolrDocumentFieldBase::getFieldNameList()
-     *
      * @todo Implement this
+     * @param eZContentClassAttribute $classAttribute
+     * @param array $exclusiveTypeFilter
+     *
+     * @return bool
      */
     public static function getFieldNameList( eZContentClassAttribute $classAttribute, $exclusiveTypeFilter = array() )
     {
@@ -165,7 +168,7 @@ class ocSolrDocumentFieldObjectRelation extends ezfSolrDocumentFieldBase
             $contentObjectAttribute = $this->ContentObjectAttribute;
         }
 
-        $metaData = '';
+        $metaDataArray = array();
 
         if ( $contentObjectAttribute )
         {
@@ -180,9 +183,9 @@ class ocSolrDocumentFieldObjectRelation extends ezfSolrDocumentFieldBase
             //{
             //    $metaData .= $item['text'] . ' ';
             //}
-            $metaDataArray = array();
+
             $content = $contentObjectAttribute->content();
-            $language = $contentObjectAttribute->attribute( 'language_code' );
+            //$language = $contentObjectAttribute->attribute( 'language_code' );
             if ( is_array( $content ) )
             {
                 foreach( $content['relation_list'] as $relationItem )
@@ -196,6 +199,7 @@ class ocSolrDocumentFieldObjectRelation extends ezfSolrDocumentFieldBase
                     {
                         $metaDataArray[] = $object->name( false, $contentObjectAttribute->attribute( 'language_code' ) );
                     }
+                    eZContentObject::clearCache( array( $subObjectID ) );
                 }
             }
             elseif ( $content instanceof eZContentObject )
@@ -337,6 +341,7 @@ class ocSolrDocumentFieldObjectRelation extends ezfSolrDocumentFieldBase
      */
     public function getData()
     {
+        /** @var eZContentClassAttribute $contentClassAttribute */
         $contentClassAttribute = $this->ContentObjectAttribute->attribute( 'contentclass_attribute' );
 
         switch ( $contentClassAttribute->attribute( 'data_type_string' ) )
@@ -345,11 +350,13 @@ class ocSolrDocumentFieldObjectRelation extends ezfSolrDocumentFieldBase
             {
                 $returnArray = array();
                 
+                /** @var eZContentObject $relatedObject */
                 $relatedObject = $this->ContentObjectAttribute->content();
 
                 if ( $relatedObject )
                 {
                     $returnArray = $this->getArrayrelatedObject( $relatedObject, $contentClassAttribute );
+                    eZContentObject::clearCache( array( $relatedObject->attribute( 'id' ) ) );
                 }
                 return $returnArray;
 		
@@ -369,14 +376,16 @@ class ocSolrDocumentFieldObjectRelation extends ezfSolrDocumentFieldBase
                         continue;
                     }
                     
+                    /** @var eZContentObjectVersion $subObject */
                     $subObject = eZContentObjectVersion::fetchVersion( $relationItem['contentobject_version'], $subObjectID );
                     
-                    if ( !$subObject )
+                    if ( !$subObject instanceof eZContentObjectVersion )
                     {
                         continue;
                     }                       
-                    
-                    $metaAttributeValues = eZSolr::getMetaAttributesForObject( $subObject->attribute( 'contentobject' ) );
+                    /** @var eZContentObject $subContentObject */
+                    $subContentObject = $subObject->attribute( 'contentobject' );
+                    $metaAttributeValues = eZSolr::getMetaAttributesForObject( $subContentObject );
 
                     foreach ( $metaAttributeValues as $metaInfo )
                     {
@@ -395,7 +404,8 @@ class ocSolrDocumentFieldObjectRelation extends ezfSolrDocumentFieldBase
                     
                     $nodeAttributeValues = array();
                     $nodePathArray = array();
-                    foreach ( $subObject->attribute( 'contentobject' )->attribute( 'assigned_nodes' ) as $contentNode )
+                    /** @var eZContentObjectTreeNode $contentNode */
+                    foreach ( $subContentObject->attribute( 'assigned_nodes' ) as $contentNode )
                     {
                         foreach ( eZSolr::nodeAttributes() as $attributeName => $fieldType )
                         {
@@ -434,7 +444,7 @@ class ocSolrDocumentFieldObjectRelation extends ezfSolrDocumentFieldBase
                             }  
                         }
                     }
-                    
+                    eZContentObject::clearCache( array( $subContentObject->attribute( 'id' ) ) );
                 }
                 
                 $contentClassAttribute = $this->ContentObjectAttribute->attribute( 'contentclass_attribute' );
@@ -451,7 +461,8 @@ class ocSolrDocumentFieldObjectRelation extends ezfSolrDocumentFieldBase
                     {
                         $returnArrayRelatedObject = $this->getArrayrelatedObject( $relatedObject,
                                                                                   $contentClassAttribute,
-                                                                                  $returnArrayRelatedObject);			
+                                                                                  $returnArrayRelatedObject);
+                        eZContentObject::clearCache( array( $relationItem['contentobject_id'] ) );
                     }
                     $returnArray = array_merge_recursive( $returnArray, $returnArrayRelatedObject);
                 }
@@ -487,10 +498,12 @@ class ocSolrDocumentFieldObjectRelation extends ezfSolrDocumentFieldBase
     {
         $returnList = array();
         // Get ezfSolrDocumentFieldBase instance for all attributes in related object
+        /** @var eZContentObjectAttribute $attribute */
         foreach( $objectVersion->contentObjectAttributes( $this->ContentObjectAttribute->attribute( 'language_code' ) ) as $attribute )
         {
-            /** @var eZContentObjectAttribute $attribute */
-            if ( $attribute->attribute( 'contentclass_attribute' )->attribute( 'is_searchable' ) )
+            /** @var eZContentClassAttribute $classAttribute */
+            $classAttribute = $attribute->attribute( 'contentclass_attribute' );
+            if ( $classAttribute->attribute( 'is_searchable' ) )
             {
                 $returnList[] = ezfSolrDocumentFieldBase::getInstance( $attribute );
             }
