@@ -370,6 +370,8 @@ class ocSolrDocumentFieldObjectRelation extends ezfSolrDocumentFieldBase
                 $returnArrayRelatedObject = array();
                 $content = $this->ContentObjectAttribute->content();
 
+                $relationCount = count( $content['relation_list'] );
+
                 foreach( $content['relation_list'] as $relationItem )
                 {
                     $subObjectID = $relationItem['contentobject_id'];
@@ -448,11 +450,13 @@ class ocSolrDocumentFieldObjectRelation extends ezfSolrDocumentFieldBase
                         }
                     }
 
-                    $returnArrayRelatedObject = $this->getArrayRelatedObject(
-                        $subContentObject,
-                        $contentClassAttribute,
-                        $returnArrayRelatedObject
-                    );
+                    if ( $relationCount < 200 ) {
+                        $returnArrayRelatedObject = $this->getArrayRelatedObject(
+                            $subContentObject,
+                            $contentClassAttribute,
+                            $returnArrayRelatedObject
+                        );
+                    }
                     $returnArray = array_merge_recursive( $returnArray, $returnArrayRelatedObject);
                     eZContentObject::clearCache( array( $subContentObject->attribute( 'id' ) ) );
                 }
