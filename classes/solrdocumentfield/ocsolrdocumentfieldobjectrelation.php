@@ -456,6 +456,15 @@ class ocSolrDocumentFieldObjectRelation extends ezfSolrDocumentFieldBase
                             $contentClassAttribute,
                             $returnArrayRelatedObject
                         );
+                    } else {
+                        $objectName = $subContentObject->name( false, $this->ContentObjectAttribute->attribute( 'language_code' ) );
+                        $fieldName = parent::generateSubattributeFieldName( $contentClassAttribute,
+                            'name',
+                            self::DEFAULT_SUBATTRIBUTE_TYPE );
+                        if ( isset( $returnArrayRelatedObject[$fieldName] ) )
+                            $returnArrayRelatedObject[$fieldName][] = $objectName;
+                        else
+                            $returnArrayRelatedObject[$fieldName] = array( $objectName );
                     }
                     $returnArray = array_merge_recursive( $returnArray, $returnArrayRelatedObject);
                     eZContentObject::clearCache( array( $subContentObject->attribute( 'id' ) ) );
