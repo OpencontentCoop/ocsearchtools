@@ -386,7 +386,12 @@ class ocSolrDocumentFieldObjectRelation extends ezfSolrDocumentFieldBase
                     
                     if ( !$subObject instanceof eZContentObjectVersion )
                     {
-                        continue;
+                        $subObjectWrapper = eZContentObject::fetch( $subObjectID );
+                        if ( $subObjectWrapper instanceof eZContentObject ){
+                            $subObject = $subObjectWrapper->currentVersion();
+                        }else{
+                            continue;
+                        }
                     }                       
                     /** @var eZContentObject $subContentObject */
                     $subContentObject = $subObject->attribute( 'contentobject' );
