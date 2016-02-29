@@ -392,9 +392,14 @@ class ocSolrDocumentFieldObjectRelation extends ezfSolrDocumentFieldBase
                         }else{
                             continue;
                         }
-                    }                       
+                    }
                     /** @var eZContentObject $subContentObject */
                     $subContentObject = $subObject->attribute( 'contentobject' );
+
+                    if ( intval( $subContentObject->attribute( 'main_node_id' ) ) == 0 ){
+                        continue;
+                    }
+
                     $metaAttributeValues = eZSolr::getMetaAttributesForObject( $subContentObject );
 
                     foreach ( $metaAttributeValues as $metaInfo )
