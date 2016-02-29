@@ -10,6 +10,31 @@ if ( $classIdentifier )
     if ( $class instanceof eZContentClass )
     {
         $tpl->setVariable( 'class', $class );
+        
+        function createGroupedDataMap( $class )
+        {
+            $groupedDataMap  = array();
+            $contentINI      = eZINI::instance( 'content.ini' );
+            $categorys       = $contentINI->variable( 'ClassAttributeSettings', 'CategoryList' );
+            $defaultCategory = $contentINI->variable( 'ClassAttributeSettings', 'DefaultCategory' );
+            foreach( $class->dataMap() as $classAttribute )
+            {            
+                $attributeCategory   = $classAttribute->attribute('category');
+                $attributeIdentifier = $classAttribute->attribute( 'identifier' );
+                if ( !isset( $categorys[ $attributeCategory ] ) || !$attributeCategory )
+                    $attributeCategory = $defaultCategory;
+    
+                if ( !isset( $groupedDataMap[ $attributeCategory ] ) )
+                    $groupedDataMap[ $attributeCategory ] = array();
+    
+                $groupedDataMap[ $attributeCategory ][$attributeIdentifier] = $classAttribute;
+    
+            }
+            return $groupedDataMap;
+        }
+
+        
+        $tpl->setVariable( 'attributes_grouped', createGroupedDataMap( $class ) );
 
         $extraParametersManager = OCClassExtraParametersManager::instance( $class );
         $handlers = OCClassExtraParametersManager::currentUserCanEditHandlers() ? $extraParametersManager->getHandlers() : array();
