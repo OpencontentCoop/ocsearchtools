@@ -10,7 +10,7 @@ class OCTableViewClassExtraParameters extends OCClassExtraParametersHandlerBase
 
     public function getName()
     {
-        return "Visualizzazione tabellare";
+        return "Visualizzazione degli attributi in forma tabellare (template full)";
     }
 
     public function attributes()
