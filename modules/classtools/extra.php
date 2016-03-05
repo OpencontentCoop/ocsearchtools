@@ -6,12 +6,28 @@ $classIdentifier = $Params['Identifier'];
 $handlerIdentifier = $Params['HandlerIdentifier'];
 $http = eZHTTPTool::instance();
 
+if ( $http->hasPostVariable( 'handler' ) && $http->hasPostVariable( 'class' ) )
+{
+    $module->redirectTo( 'classtools/extra/' . $http->postVariable( 'class' ) . '/' . $http->postVariable( 'handler' ) );
+}
+
 if ( $classIdentifier )
 {
     $class = eZContentClass::fetchByIdentifier( $classIdentifier );
     if ( $class instanceof eZContentClass )
     {
+
         $extraParametersManager = OCClassExtraParametersManager::instance( $class );
+        $handlers = OCClassExtraParametersManager::currentUserCanEditHandlers() ? $extraParametersManager->getHandlers() : array();
+        $tpl->setVariable( 'extra_handlers', $handlers );
+
+        if ( !$handlerIdentifier ){
+            $firstHandler = array_shift( $handlers );
+            $handlerIdentifier = $firstHandler->getIdentifier();
+            $handlers = array_unshift( $handlers, $firstHandler );
+        }
+
+
         $handler = $extraParametersManager->getHandler( $handlerIdentifier );
         if ( $handlerIdentifier && OCClassExtraParametersManager::currentUserCanEditHandlers() && $handler instanceof OCClassExtraParametersHandlerInterface)
         {

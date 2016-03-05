@@ -85,6 +85,7 @@ abstract class OCClassExtraParametersHandlerBase implements OCClassExtraParamete
     {
         return array(
             'identifier',
+            'keys',
             'name',
             'enabled',
             'class_edit_template_url',
@@ -103,6 +104,9 @@ abstract class OCClassExtraParametersHandlerBase implements OCClassExtraParamete
         {
             case 'identifier':
                 return $this->getIdentifier();
+
+            case 'keys':
+                return $this->attributes();
 
             case 'name':
                 return $this->getName();

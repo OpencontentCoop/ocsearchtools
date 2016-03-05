@@ -5,7 +5,7 @@
             {if and( $handler.show|contains( $identifier ), or( $handler.show_empty|contains( $identifier ), $attribute.has_content ) )}
                 <tr>
                     {if and( $handler.show_label|contains( $identifier ), $handler.collapse_label|contains( $identifier )|not() )}
-                        <th>{$attribute.contentclass_attribute_name}</th>
+                        <td>{$attribute.contentclass_attribute_name}</td>
                     {/if}
                     <td{if $handler.show_label|contains( $identifier )|not()} colspan="2"{/if}>
                         {if and( $handler.show_label|contains( $identifier ), $handler.collapse_label|contains( $identifier ) )}
