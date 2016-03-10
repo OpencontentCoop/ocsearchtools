@@ -29,8 +29,7 @@
                 },
                 navigation: "nav/nav-section-facet.tpl",
             },
-            json: '',
-            token: '',
+            json: '',            
             eZJsCoreCallMethod: 'ocst::facetnavigation',
             chosen: {
                 allow_single_deselect:true
@@ -68,7 +67,7 @@
 
     FacetNavigation.prototype = {
         init: function () {            
-            var self = this;                        
+            var self = this;            
             var input = '#' + $(this.element).attr('id') + ' input' + this.settings.inputId;
             var nav = '#' + $(this.element).attr('id') + ' ' + this.settings.navigationContainer + ' a';
             var pagination = '#' + $(this.element).attr('id') + ' ' + this.settings.paginationContainer + ' a';
@@ -95,14 +94,14 @@
         fetch: function(){                        
             tooltip = null;
             var self = this;
-            var settings = this.settings;
+            $(self.settings.formContainer+','+self.settings.contentContainer).css('opacity','0.5');
+            var settings = self.settings;
             var  data = {
-                json: settings.json,                
-                token: settings.token,
-                userParameters: $.extend( {}, this.currentParameters, this.selectedParameters ),
+                json: settings.json,                                
+                userParameters: $.extend( {}, self.currentParameters, self.selectedParameters ),
                 template: settings.template
             }            
-            $.ez( this.settings.eZJsCoreCallMethod, data, function( response ){
+            $.ez( self.settings.eZJsCoreCallMethod, data, function( response ){
                 if (response.error_text != '') {
                     alert(response.error_text);
                 }else{
@@ -112,6 +111,7 @@
                     $(settings.inputId).putCursorAtEnd();
                     $(settings.formContainer + ' button[type="submit"]', $(self.element)).hide();
                 }
+                $(self.settings.formContainer+','+self.settings.contentContainer).css('opacity','1');
             });
         },
         onClick: function (event) {
@@ -164,11 +164,18 @@
         },
         onSubmit: function (event) {
             var self = event.data;
+            self.selectedParameters = {};
             $(self.settings.formContainer + " select", $(self.element)).trigger("chosen:updated");            
-            var form = $( self.settings.formContainer, $(self.element) ).serializeArray();      
+            var form = $( self.settings.formContainer, $(self.element) ).serializeArray();            
             $.each(form, function(){            
-                self.currentParameters[this.name] = null;
-                self.selectedParameters[this.name] = this.value;
+                var name = this.name.replace('[]','');
+                var value = this.value;                                
+                self.currentParameters[name] = null;                
+                if (name in self.selectedParameters) {
+                    self.selectedParameters[name] += '::'+this.value;
+                }else{
+                    self.selectedParameters[name] = this.value;   
+                }                
             });
             self.selectedParameters.offset = 0;
             self.fetch();

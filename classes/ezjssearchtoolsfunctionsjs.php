@@ -112,49 +112,41 @@ class ezjsSearchToolsFunctionsJS extends ezjscServerFunctions
             if ( empty( $value ) )
                 unset( $userParameters[$key] );
 
-        $token = $http->postVariable( 'token', null );
         $template = $http->postVariable( 'template', null );    
-        if ( OCFacetNavgationHelper::validateToken( $token, $fetchParams ) )
-        {
-            $data = OCFacetNavgationHelper::data( $fetchParams, $userParameters, '', isset( $userParameters['query'] ) ? $userParameters['query'] : '' );
-            $contentTpl = $template['content'];
-            $navigationTpl = $template['navigation'];
-            
-            $tpl = eZTemplate::factory();
-            $tpl->setVariable( 'data', $data );
-            $tpl->setVariable( 'view_parameters', $userParameters );            
-            if ( is_array( $contentTpl ) )
-            {                
-                foreach( $contentTpl as $key => $value )
-                    if ( $key != 'name' )
-                        $tpl->setVariable( $key, $value );
-                $content = $tpl->fetch( 'design:' . $contentTpl['name'] );
-            }
-            else
-                $content = $tpl->fetch( 'design:' . $contentTpl );
-
-            $tpl = eZTemplate::factory();
-            $tpl->setVariable( 'data', $data );
-            if ( is_array( $navigationTpl ) )
-            {                
-                foreach( $navigationTpl as $key => $value )
-                    if ( $key != 'name' )
-                        $tpl->setVariable( $key, $value );
-                $navigation = $tpl->fetch( 'design:' . $navigationTpl['name'] );
-            }
-            else
-                $navigation = $tpl->fetch( 'design:' . $navigationTpl );
-
-            return array(
-                'content' => $content,
-                'navigation' => $navigation
-                //'fetch_paramters' => $data['fetch_parameters'],
-            );
+        $data = OCFacetNavgationHelper::data( $fetchParams, $userParameters, '', isset( $userParameters['query'] ) ? $userParameters['query'] : '' );
+        $contentTpl = $template['content'];
+        $navigationTpl = $template['navigation'];
+        
+        $tpl = eZTemplate::factory();
+        $tpl->setVariable( 'data', $data );
+        $tpl->setVariable( 'view_parameters', $userParameters );            
+        if ( is_array( $contentTpl ) )
+        {                
+            foreach( $contentTpl as $key => $value )
+                if ( $key != 'name' )
+                    $tpl->setVariable( $key, $value );
+            $content = $tpl->fetch( 'design:' . $contentTpl['name'] );
         }
         else
-        {
-            throw new Exception( "Invalid token" );
+            $content = $tpl->fetch( 'design:' . $contentTpl );
+
+        $tpl = eZTemplate::factory();
+        $tpl->setVariable( 'data', $data );
+        if ( is_array( $navigationTpl ) )
+        {                
+            foreach( $navigationTpl as $key => $value )
+                if ( $key != 'name' )
+                    $tpl->setVariable( $key, $value );
+            $navigation = $tpl->fetch( 'design:' . $navigationTpl['name'] );
         }
+        else
+            $navigation = $tpl->fetch( 'design:' . $navigationTpl );
+
+        return array(
+            'content' => $content,
+            'navigation' => $navigation
+            //'fetch_paramters' => $data['fetch_parameters'],
+        );        
     }
     
 }
