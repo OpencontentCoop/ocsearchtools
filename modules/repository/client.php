@@ -1,5 +1,5 @@
 <?php
-
+/** @var eZModule $module */
 $module = $Params['Module'];
 $repositoryID = isset( $Params['RepositoryID'] ) ? $Params['RepositoryID'] : false;
 $tpl = eZTemplate::factory();
@@ -7,11 +7,9 @@ $http = eZHTTPTool::instance();
 
 try
 {
-    
     if ( !$repositoryID )
     {
-    
-        $list = OCCrossSearch::listAvailableRepositories();    
+        $list = OCCrossSearch::listAvailableRepositories();
         $tpl->setVariable( 'repository_list', $list );
         $Result = array();
         $Result['content'] = $tpl->fetch( 'design:repository/list.tpl' );
@@ -34,9 +32,9 @@ try
     }
     else
     {
-        return $module->handleError( eZError::KERNEL_NOT_AVAILABLE, 'kernel' );
+        $module->handleError( eZError::KERNEL_NOT_AVAILABLE, 'kernel' );
+        return;
     }
-    
 }
 catch ( Exception $e )
 {

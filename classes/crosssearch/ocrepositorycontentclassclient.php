@@ -290,6 +290,8 @@ class OCRepositoryContentClassClient extends OCClassSearchTemplate  implements O
     }
 
     /**
+     * @param bool $createClassIfNotExists
+     *
      * @throws Exception
      */
     protected function checkClass( $createClassIfNotExists = false )
@@ -359,6 +361,96 @@ class OCRepositoryContentClassClient extends OCClassSearchTemplate  implements O
         $pendingItem = new eZPendingActions( $rowPending );
         $pendingItem->store();
         return $newObject;
+    }
+
+    /**
+     * @param eZModule $module
+     * @param eZTemplate $tpl
+     * @param $repositoryNodeID
+     * @param $localParentNodeID
+     *
+     * @throws Exception
+     */
+    public function handleImport(
+        eZModule $module,
+        eZTemplate $tpl,
+        $repositoryNodeID,
+        $localParentNodeID
+    )
+    {
+        $this->handleTagChooserImport($module,$tpl,$repositoryNodeID,$localParentNodeID);
+//        $newObject = $this->import( $repositoryNodeID, $localParentNodeID );
+//        $module->redirectTo( $newObject->attribute( 'main_node' )->attribute( 'url_alias' ) );
+    }
+
+    /**
+     * @deprecated usare un client ad hoc
+     *
+     * @param eZModule $module
+     * @param eZTemplate $tpl
+     * @param $repositoryNodeID
+     * @param $localParentNodeID
+     *
+     * @throws Exception
+     */
+    protected function handleTagChooserImport(
+        eZModule $module,
+        eZTemplate $tpl,
+        $repositoryNodeID,
+        $localParentNodeID
+    )
+    {
+        if ( isset( $this->attributes['definition']['AskTagTematica'] )
+             && $this->attributes['definition']['AskTagTematica'] == true )
+        {
+            $http = eZHTTPTool::instance();
+
+            if( !$http->hasPostVariable( 'SelectTags' ) ){
+                $tpl->setVariable( 'fromPage', '/repository/import/' . $this->attributes['definition']['Identifier ']. '/' . $repositoryNodeID );
+                $tpl->setVariable( 'localParentNodeID', $localParentNodeID );
+
+                $Result['content'] = $tpl->fetch( 'design:repository/eztagschooser.tpl' );
+                $Result['path'] = array( array( 'url' => false,
+                                                'text' => 'Scegli Tag' ) );
+                return;
+            }
+            else
+            {
+                $tagIDs = array();
+                $tagKeywords = array();
+                $tagParents = array();
+
+                foreach( $_POST as $key => $value )
+                {
+                    if( substr( $key, 0, 8 ) == 'tematica' ){
+                        list($tagID, $tagKeyword, $tagParent) = explode(";", $value);
+                        $tagIDs[] = $tagID;
+                        $tagKeywords[] = $tagKeyword;
+                        $tagParents[] = $tagParent;
+                    }
+                }
+            }
+
+            $newObject = $this->import( $repositoryNodeID, $localParentNodeID );
+
+            foreach( $newObject->contentObjectAttributes() as $attribute){
+                if($attribute->contentClassAttributeIdentifier() == 'tematica'){
+                    $eZTags = new eZTags();
+
+                    $eZTags->createFromStrings( implode('|#', $tagIDs), implode('|#', $tagKeywords), implode('|#',$tagParents) );
+                    $eZTags->store( $attribute );
+
+                    break;
+                }
+            }
+
+            $module->redirectTo( $newObject->attribute( 'main_node' )->attribute( 'url_alias' ) );
+        }
+        else
+        {
+            $newObject = $this->import( $repositoryNodeID, $localParentNodeID );
+            $module->redirectTo( $newObject->attribute( 'main_node' )->attribute( 'url_alias' ) );
+        }
     }
 
 }

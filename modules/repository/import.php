@@ -1,5 +1,5 @@
 <?php
-
+/** @var eZModule $module */
 $module = $Params['Module'];
 $tpl = eZTemplate::factory();
 $http = eZHTTPTool::instance();
@@ -29,13 +29,12 @@ try
                                              $module );
             return;
         }
-        
-        $newObject = $repository->import( $repositoryNodeID, $localParentNodeID );
-        $module->redirectTo( $newObject->attribute( 'main_node' )->attribute( 'url_alias' ) );        
+
+        $repository->handleImport( $module, $tpl, $repositoryNodeID, $localParentNodeID );
     }
     else
     {
-        return $module->redirect( 'repository/client' );
+        $module->redirectTo( 'repository/client' );
     }
     
 }

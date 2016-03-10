@@ -70,7 +70,7 @@ class OCCrossSearch
     /**
      * @param int $repositoryID
      *
-     * @return OCRepositoryClientInterface
+     * @return OCRepositoryClientInterface|OCClassSearchTemplate
      * @throws Exception
      */
     public static function instanceRepository( $repositoryID )
@@ -128,6 +128,4 @@ class OCCrossSearch
         
         throw new Exception( "Errore" );
     }
-    
-    
 }
