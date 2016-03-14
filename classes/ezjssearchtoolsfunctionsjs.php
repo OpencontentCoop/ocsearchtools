@@ -105,7 +105,10 @@ class ezjsSearchToolsFunctionsJS extends ezjscServerFunctions
     {
         $http = eZHTTPTool::instance();
         $json = $http->postVariable( 'json', null );
-        $fetchParams = json_decode( $json, true );
+        if ( is_array($json) )
+            $fetchParams = $json;
+        else
+            $fetchParams = json_decode( $json, true );        
         $userParameters = $http->postVariable( 'userParameters', null );
 
         foreach( $userParameters as $key => $value )
@@ -144,8 +147,8 @@ class ezjsSearchToolsFunctionsJS extends ezjscServerFunctions
 
         return array(
             'content' => $content,
-            'navigation' => $navigation
-            //'fetch_paramters' => $data['fetch_parameters'],
+            'navigation' => $navigation,
+            'fetch_paramters' => $data['fetch_parameters'],
         );        
     }
     

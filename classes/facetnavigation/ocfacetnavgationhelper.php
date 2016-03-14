@@ -167,7 +167,11 @@ class OCFacetNavgationHelper
                     }
                     if ( count( $filterValue ) > 1 )
                     {
-                        $multiFilter = array( 'or' );
+                        $logic = 'or';
+                        if ( isset( $names['logic'] ) ){
+                            $logic = $names['logic'];
+                        }
+                        $multiFilter = array( $logic );
                         foreach( $filterValue as $val )
                         {
                             $multiFilter[] = "{$names['field']}:\"{$val}\"";
