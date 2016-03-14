@@ -63,6 +63,9 @@
         }
         this.currentParameters = currentParameters;
         this.init();
+        if ($(this.settings.formContainer + " select option:selected").length > 0) {
+          this.onSubmit({data:this});
+        }
     }
 
     FacetNavigation.prototype = {
@@ -179,7 +182,9 @@
             });
             self.selectedParameters.offset = 0;
             self.fetch();
-            event.preventDefault();
+            if (typeof event.preventDefault != "undefined") { 
+              event.preventDefault();
+            }
         },
         onInput: function (event) {            
             var self = event.data;            
