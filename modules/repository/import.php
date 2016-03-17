@@ -29,8 +29,9 @@ try
                                              $module );
             return;
         }
-
-        $repository->handleImport( $module, $tpl, $repositoryNodeID, $localParentNodeID );
+        
+        $Result = array();
+        $repository->handleImport( $module, $tpl, $repositoryNodeID, $localParentNodeID, $Result );
     }
     else
     {
