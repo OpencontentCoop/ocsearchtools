@@ -349,7 +349,9 @@ class OCRepositoryContentClassClient extends OCClassSearchTemplate  implements O
         {
             throw new Exception( "Url remoto \"{$apiNodeUrl}\" non raggiungibile" );
         }
+        
         $newObject = $remoteApiNode->createContentObject( $localParentNodeID );
+        
         if ( !$newObject instanceof eZContentObject )
         {            
             throw new Exception( "Fallita la creazione dell'oggetto da nodo remoto" );
@@ -375,10 +377,11 @@ class OCRepositoryContentClassClient extends OCClassSearchTemplate  implements O
         eZModule $module,
         eZTemplate $tpl,
         $repositoryNodeID,
-        $localParentNodeID
+        $localParentNodeID,
+        &$Result = NULL
     )
     {
-        $this->handleTagChooserImport($module,$tpl,$repositoryNodeID,$localParentNodeID);
+        $this->handleTagChooserImport($module,$tpl,$repositoryNodeID,$localParentNodeID,$Result);
 //        $newObject = $this->import( $repositoryNodeID, $localParentNodeID );
 //        $module->redirectTo( $newObject->attribute( 'main_node' )->attribute( 'url_alias' ) );
     }
@@ -397,21 +400,23 @@ class OCRepositoryContentClassClient extends OCClassSearchTemplate  implements O
         eZModule $module,
         eZTemplate $tpl,
         $repositoryNodeID,
-        $localParentNodeID
+        $localParentNodeID,
+        &$Result
     )
     {
         if ( isset( $this->attributes['definition']['AskTagTematica'] )
              && $this->attributes['definition']['AskTagTematica'] == true )
         {
             $http = eZHTTPTool::instance();
-
+            
             if( !$http->hasPostVariable( 'SelectTags' ) ){
-                $tpl->setVariable( 'fromPage', '/repository/import/' . $this->attributes['definition']['Identifier ']. '/' . $repositoryNodeID );
+                $tpl->setVariable( 'fromPage', '/repository/import/' . $this->attributes['definition']['Identifier']. '/' . $repositoryNodeID );
                 $tpl->setVariable( 'localParentNodeID', $localParentNodeID );
 
                 $Result['content'] = $tpl->fetch( 'design:repository/eztagschooser.tpl' );
                 $Result['path'] = array( array( 'url' => false,
                                                 'text' => 'Scegli Tag' ) );
+                
                 return;
             }
             else
