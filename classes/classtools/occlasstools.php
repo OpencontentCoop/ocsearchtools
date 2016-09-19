@@ -706,8 +706,10 @@ class OCClassTools
         $class = $this->currentClass;
         $localeAttributes = $class->fetchAttributes();
         $placement = count( $localeAttributes );
+        $allowedTypes = eZDataType::allowedTypes();
                  
-        if( !$class->fetchAttributeByIdentifier( $originalAttribute->Identifier ) )
+        if( !$class->fetchAttributeByIdentifier( $originalAttribute->Identifier )
+            && in_array($originalAttribute->DataTypeString, $allowedTypes))
         {
             /** @var eZContentClassAttribute $localeAttribute */
             $localeAttribute = eZContentClassAttribute::create(
