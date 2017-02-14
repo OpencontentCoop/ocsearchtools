@@ -157,7 +157,23 @@ class OCClassSearchFormHelper
         {
             $this->attributeFields = array();
             $dataMap = $this->contentClass->attribute( 'data_map' );
-            $disabled = eZINI::instance( 'ocsearchtools.ini' )->variable( 'ClassSearchFormSettings', 'DisabledAttributes' );
+
+            $searchToolsINI = eZINI::instance( 'ocsearchtools.ini' );
+            $disabled       = $searchToolsINI->variable( 'ClassSearchFormSettings', 'DisabledAttributes' );
+
+            // Groups may have different ClassSearchFormSettings
+            $user       = eZUser::currentUser();
+            $userGroups = $user->groups();
+
+            foreach ($userGroups as $g)
+            {
+                if ( $searchToolsINI->hasSection('ClassSearchFormSettingsGroup_' . $g) )
+                {
+                    $disabled = $searchToolsINI->variable( 'ClassSearchFormSettingsGroup_' . $g, 'DisabledAttributes' );
+                    break;
+                }
+            }
+
             /** @var $dataMap eZContentClassAttribute[] */
             foreach( $dataMap as $attribute )
             {
