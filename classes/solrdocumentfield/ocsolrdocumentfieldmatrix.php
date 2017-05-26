@@ -55,15 +55,18 @@ class ocSolrDocumentFieldMatrix extends ezfSolrDocumentFieldBase
             }
             foreach ($rows['sequential'] as $row) {
                 $contents[] = array_combine($keys, $row['columns']);
-            }
+            }            
             foreach ( array_keys( eZSolr::$fieldTypeContexts ) as $context )
             {
-                foreach($contents as $values) {
+                foreach($contents as $index => $values) {             
                     foreach ($values as $key => $value) {
                         if (!empty($value)) {
                             $fieldName = self::getFieldName($contentClassAttribute, $key, $context);
-                            $data[$fieldName] = $value;
-                            $stringList[] = $value;
+                            if (!isset($data[$fieldName])){
+                            	$data[$fieldName] = array();
+                            }
+                            $data[$fieldName][$index] = $value;
+                            $stringList[$index] = $value;
                         }
                     }
                 }
