@@ -596,7 +596,7 @@ class OCClassTools
                     $missingInOriginal[] = json_decode( json_encode( $attribute ) );
                     $this->extraContentObjectAttributes[] = $attribute;                    
                     /** @var eZContentObjectAttribute[] $contentAttributes */
-                    $contentAttributes = eZContentObjectAttribute::fetchSameClassAttributeIDList( $attribute->attribute( 'id' ), true );
+                    $contentAttributes = array(); //eZContentObjectAttribute::fetchSameClassAttributeIDList( $attribute->attribute( 'id' ), true );
                     $contents = array();
                     foreach( $contentAttributes as $contentAttribute )
                     {
@@ -632,7 +632,7 @@ class OCClassTools
                 {
                     $this->notifications[$this->notificationLevel[$localeIdentifier]][$id] = $localeIdentifier;
                     /** @var eZContentObjectAttribute[] $contentAttributes */
-                    $contentAttributes = eZContentObjectAttribute::fetchSameClassAttributeIDList( $localeAttribute->attribute( 'id' ), true );
+                    $contentAttributes = array(); //eZContentObjectAttribute::fetchSameClassAttributeIDList( $localeAttribute->attribute( 'id' ), true );
                     $contents = array();
                     foreach( $contentAttributes as $contentAttribute )
                     {
