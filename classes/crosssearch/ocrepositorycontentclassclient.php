@@ -440,10 +440,8 @@ class OCRepositoryContentClassClient extends OCClassSearchTemplate  implements O
 
             foreach( $newObject->contentObjectAttributes() as $attribute){
                 if($attribute->contentClassAttributeIdentifier() == 'tematica'){
-                    $eZTags = new eZTags();
 
-                    $eZTags->createFromStrings( implode('|#', $tagIDs), implode('|#', $tagKeywords), implode('|#',$tagParents) );
-                    $eZTags->store( $attribute );
+                    eZTags::createFromStrings( $attribute, implode('|#', $tagIDs), implode('|#', $tagKeywords), implode('|#',$tagParents), '' )->store( $attribute );
 
                     break;
                 }
