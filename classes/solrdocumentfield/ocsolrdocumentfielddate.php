@@ -41,7 +41,7 @@ class ocSolrDocumentFieldDate extends ezfSolrDocumentFieldBase
     {
         $contentClassAttribute = $this->ContentObjectAttribute->attribute( 'contentclass_attribute' );
         $metaData = $this->ContentObjectAttribute->metaData();    
-        if ( $metaData !== NULL && $metaData > 0 )
+        if ( $metaData !== NULL && $metaData != 0 )
         {
             $processedMetaDataArray = array();
             $processedMetaDataArray[] = strftime( '%Y-%m-%dT%H:%M:%SZ', (int)$metaData );
