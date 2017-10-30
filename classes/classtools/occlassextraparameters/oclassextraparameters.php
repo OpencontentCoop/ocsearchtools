@@ -58,10 +58,38 @@ class OCClassExtraParameters extends eZPersistentObject
     public function __get( $name )
     {
         $ret = null;
+        if($name == 'key'){
+            $name = 'parameter_key';
+        }
         if( $this->hasAttribute( $name ) )
             $ret = $this->attribute( $name );
 
         return $ret;
+    }
+
+    public function hasAttribute( $attr )
+    {
+        if($attr == 'key'){
+            return true;
+        }
+
+        return parent::hasAttribute($attr);
+    }
+
+    public function attribute( $attr, $noFunction = false )
+    {
+        if($attr == 'key'){
+            $attr = 'parameter_key';
+        }
+        return parent::attribute($attr, $noFunction);
+    }
+
+    public function setAttribute( $attr, $val )
+    {
+        if($attr == 'key'){
+            $attr = 'parameter_key';
+        }
+        parent::setAttribute($attr, $val);
     }
 
     public static function fetchByHandler( $handler )
