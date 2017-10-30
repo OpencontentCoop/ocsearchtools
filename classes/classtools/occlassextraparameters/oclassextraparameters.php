@@ -3,6 +3,16 @@
 class OCClassExtraParameters extends eZPersistentObject
 {
 
+    public static function getKeyDefinitionName()
+    {
+        $key = 'key';
+        if (eZINI::instance()->variable('DatabaseSettings', 'DatabaseImplementation') == 'ezmysqli') {
+            $key = 'parameter_key';
+        }
+
+        return $key;
+    }
+
     public static function definition()
     {
         return array(
@@ -25,7 +35,7 @@ class OCClassExtraParameters extends eZPersistentObject
                     'default' => null,
                     'required' => true
                 ),
-                'key' => array(
+                self::getKeyDefinitionName() => array(
                     'name' => 'Key',
                     'datatype' => 'string',
                     'default' => null,
@@ -44,7 +54,7 @@ class OCClassExtraParameters extends eZPersistentObject
                     'required' => false
                 )
             ),
-            'keys' => array( 'class_identifier', 'attribute_identifier', 'handler', 'key' ),
+            'keys' => array( 'class_identifier', 'attribute_identifier', 'handler', OCClassExtraParameters::getKeyDefinitionName() ),
             'class_name' => 'OCClassExtraParameters',
             'name' => 'occlassextraparameters'
         );
@@ -58,10 +68,38 @@ class OCClassExtraParameters extends eZPersistentObject
     public function __get( $name )
     {
         $ret = null;
+        if($name == 'key'){
+            $name = OCClassExtraParameters::getKeyDefinitionName();
+        }
         if( $this->hasAttribute( $name ) )
             $ret = $this->attribute( $name );
 
         return $ret;
+    }
+
+    public function hasAttribute( $attr )
+    {
+        if($attr == 'key'){
+            return true;
+        }
+
+        return parent::hasAttribute($attr);
+    }
+
+    public function attribute( $attr, $noFunction = false )
+    {
+        if($attr == 'key'){
+            $attr = OCClassExtraParameters::getKeyDefinitionName();
+        }
+        return parent::attribute($attr, $noFunction);
+    }
+
+    public function setAttribute( $attr, $val )
+    {
+        if($attr == 'key'){
+            $attr = OCClassExtraParameters::getKeyDefinitionName();
+        }
+        parent::setAttribute($attr, $val);
     }
 
     public static function fetchByHandler( $handler )
@@ -86,7 +124,7 @@ class OCClassExtraParameters extends eZPersistentObject
 
     public static function removeByHandlerClassIdentifierAndKey( $handler, $classIdentifier, $key )
     {
-        parent::removeObject( self::definition(), array( 'handler' => $handler, 'class_identifier' => $classIdentifier, 'key' => $key ) );
+        parent::removeObject( self::definition(), array( 'handler' => $handler, 'class_identifier' => $classIdentifier, self::getKeyDefinitionName() => $key ) );
     }
 
 
