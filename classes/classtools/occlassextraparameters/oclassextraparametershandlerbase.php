@@ -51,7 +51,7 @@ abstract class OCClassExtraParametersHandlerBase implements OCClassExtraParamete
                         'class_identifier' => $classIdentifier,
                         'attribute_identifier' => '*',
                         'handler' => $this->getIdentifier(),
-                        'key' => $key,
+                        'parameter_key' => $key,
                         'value' => $value
                     );
                     $parameter = new OCClassExtraParameters( $row );
@@ -69,7 +69,7 @@ abstract class OCClassExtraParametersHandlerBase implements OCClassExtraParamete
                             'class_identifier' => $classIdentifier,
                             'attribute_identifier' => $attributeIdentifier,
                             'handler' => $this->getIdentifier(),
-                            'key' => $key,
+                            'parameter_key' => $key,
                             'value' => $value
                         );
                         $parameter = new OCClassExtraParameters( $row );

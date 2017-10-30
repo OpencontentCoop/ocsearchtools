@@ -25,7 +25,7 @@ class OCClassExtraParameters extends eZPersistentObject
                     'default' => null,
                     'required' => true
                 ),
-                'key' => array(
+                'parameter_key' => array(
                     'name' => 'Key',
                     'datatype' => 'string',
                     'default' => null,
@@ -44,7 +44,7 @@ class OCClassExtraParameters extends eZPersistentObject
                     'required' => false
                 )
             ),
-            'keys' => array( 'class_identifier', 'attribute_identifier', 'handler', 'key' ),
+            'keys' => array( 'class_identifier', 'attribute_identifier', 'handler', 'parameter_key' ),
             'class_name' => 'OCClassExtraParameters',
             'name' => 'occlassextraparameters'
         );
@@ -86,7 +86,7 @@ class OCClassExtraParameters extends eZPersistentObject
 
     public static function removeByHandlerClassIdentifierAndKey( $handler, $classIdentifier, $key )
     {
-        parent::removeObject( self::definition(), array( 'handler' => $handler, 'class_identifier' => $classIdentifier, 'key' => $key ) );
+        parent::removeObject( self::definition(), array( 'handler' => $handler, 'class_identifier' => $classIdentifier, 'parameter_key' => $key ) );
     }
 
 
