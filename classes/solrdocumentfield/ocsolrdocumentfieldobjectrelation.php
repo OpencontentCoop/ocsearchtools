@@ -147,38 +147,7 @@ class ocSolrDocumentFieldObjectRelation extends ezfSolrDocumentFieldBase
      */
     public static function getFieldNameList( eZContentClassAttribute $classAttribute, $exclusiveTypeFilter = array() )
     {
-        if ($classAttribute->attribute( 'data_type_string' ) == 'ezobjectrelationlist'){
-            $classAttributeContent = $classAttribute->content();
-            $classConstraintList = (array)$classAttributeContent['class_constraint_list'];
-            if (!empty($classConstraintList)){
-                $classIDArray = array();
-                foreach ($classConstraintList as $classIdentifier) {
-                    $classIDArray[] = eZContentClass::classIDByIdentifier($classIdentifier);
-                }
-                $condArray = array(
-                    "is_searchable" => 1,
-                    "version" => eZContentClass::VERSION_STATUS_DEFINED,
-                    "contentclass_id" => array( $classIDArray )
-                );
-                /** @var eZContentClassAttribute[] $subclassAttributeArray */
-                $subclassAttributeArray = eZContentClassAttribute::fetchFilteredList( $condArray );
-                $fieldArray = array(
-                    self::getFieldName( $classAttribute )
-                );
-                $fieldArray[] = parent::generateSubmetaFieldName( 'name', $classAttribute );
-                foreach ( $subclassAttributeArray as $subclassAttribute ){
-                    if (in_array($subclassAttribute->attribute('data_type_string'), array('ezstring','eztext'))){
-                        $type = self::getTypeForSubattribute( $classAttribute, $subclassAttribute->attribute('identifier'), 'search' );
-                        if ($type){
-                            $fieldArray[] = parent::generateSubattributeFieldName( $classAttribute, $subclassAttribute->attribute('identifier'), $type );
-                        }
-                    }
-                }
-
-                return $fieldArray;
-            }
-        }
-        return false;
+        return array(parent::generateSubmetaFieldName('name', $classAttribute));
     }
 
     /**
