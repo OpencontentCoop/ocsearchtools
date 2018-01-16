@@ -38,6 +38,9 @@ if ( $classIdentifier )
                 {
                     $data = $http->variable( 'extra_handler_' . $handlerIdentifier );
                     $handler->storeParameters( $data );
+
+                    // Elimino la cache degli ini altrimenti le impostazioni non hanno effetto sulla visualizzazione
+                    OpenPAINI::clearDynamicIniCache();
                 }
                 $module->redirectTo( 'classtools/extra/' . $classIdentifier . '/' . $handlerIdentifier );
             }
