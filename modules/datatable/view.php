@@ -100,8 +100,6 @@ if ( empty( $filters ) )
     $filters = null;
 }
 
-$solrSearch = new eZSolr();
-
 $params = array( 'SearchOffset' => $iDisplayStart,
                  'SearchLimit' => $iDisplayLength,                 
                  'SortBy' => $sortBy,
@@ -111,7 +109,7 @@ $params = array( 'SearchOffset' => $iDisplayStart,
                  'AsObjects' => false,                 
                  'FieldsToReturn' => $fieldsToReturn );
 
-$solrSearch = new eZSolr();
+$solrSearch = new OCSolr();
 $search = $solrSearch->search( $query, $params );
 $search['SearchParameters'] = $params;
 $iFilteredTotal = count( $search['SearchResult'] );
