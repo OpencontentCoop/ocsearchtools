@@ -1,28 +1,39 @@
 <div class="global-view-full">
 {ezscript_require( array( 'ezjsc::jquery', 'jquery.tablesorter.min.js' ) )}
 <script type="text/javascript">
-var OpenpaClassBaseUrl = {'/classtools/class'|ezurl()};
+var OpenpaClassBaseUrl = {'/classtools/compare'|ezurl()};
+var remoteQueryString = '{$remote_query_string}';
 {literal}
 $(document).ready(function() {
-    $("table.list").tablesorter();
-    $("table.list th").css( 'cursor', 'pointer' );
-    $("table tr.class").each( function(){
-        var self = $(this);
-        var id = $(this).attr( 'id' );
-        var url = OpenpaClassBaseUrl + '/' + id + '?format=json';
+    var compare = function (id, container) {
+        var url = OpenpaClassBaseUrl + '/' + id + '?format=json&' + remoteQueryString;
         $.get( url, function(data){
             $.each( data, function( index, value){
-                if (self.find( 'td.'+index ).length > 0) {
+                if (container.find( 'td.'+index ).length > 0) {
                     if (value) {
-                        self.find( 'td.'+index ).html( '<div class="message-error text-center"><strong>KO</strong></div>' );                        
+                        container.find( 'td.'+index ).html( '<div class="message-error text-center"><strong>KO</strong></div>' );
                     }else{
-                        self.find( 'td.'+index ).html( '<div class="message-feedback text-center">OK</div>' );
+                        container.find( 'td.'+index ).html( '<div class="message-feedback text-center">OK</div>' );
                     }
-                    $("table.list").trigger("update"); 
+                    $("table.list").trigger("update");
                 }
             });
         });
+    };
+
+    $("table.list").tablesorter();
+    $("table.list th").css( 'cursor', 'pointer' );
+    $("table tr.class").each( function(){
+        var tr = $(this);
+        var id = $(this).attr( 'id' );
+        compare(id, tr);
     });
+    $('.refresh').on('click', function (e) {
+        var tr = $(this).parents('tr');
+        var id = tr.attr( 'id' );
+        compare(id, tr);
+        e.preventDefault();
+    })
 });
 {/literal}
 </script>
@@ -44,9 +55,10 @@ $(document).ready(function() {
         {foreach $classList as $class sequence array(bglight,bgdark) as $style}
         <tr id="{$class.identifier}" class="class {$style}">            
             <td style="vertical-align: middle">
-                <a target="_blank" href={concat('/classtools/class/',$class.identifier)|ezurl()}>
+                <a target="_blank" href={concat('/classtools/compare/',$class.identifier,'?',$remote_query_string)|ezurl()}>
                     {$class.name} ({$class.identifier})
                 </a>
+                <a href="#" class="refresh pull-right"><i class="fa fa-refresh"></i></a>
             </td>
             <td class="hasMissingAttributes"><em><small>caricamento</small></em></td>                        
             <td class="hasExtraAttributes"><em><small>caricamento</small></em></td>                        

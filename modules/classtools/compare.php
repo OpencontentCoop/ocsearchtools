@@ -62,7 +62,12 @@ try
             $removeExtra = $http->postVariable( 'RemoveExtra' ) == 1;
         }
         $tools->sync( $force, $removeExtra );
-        return $module->redirectTo( '/classtools/compare/' . $id . $remoteRequestSuffix );
+
+        $redirect = '/classtools/compare/' . $id . $remoteRequestSuffix;
+        if (class_exists('ezpKernelWeb')){
+            $redirect = '/classtools/compare/' . $id;
+        }
+        return $module->redirectTo( $redirect );
     }
     
     $tools->compare();

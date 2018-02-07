@@ -477,15 +477,18 @@ class OCClassTools
         }
         else
         {
-            $currentUrl = eZINI::instance()->variable( 'SiteSettings', 'SiteURL' );
+            $currentUrl = rtrim(eZINI::instance()->variable( 'SiteSettings', 'SiteURL' ), '/');
             $originalRepositoryUrl = self::$remoteUrl . $identifier;
-            if ( stripos( $originalRepositoryUrl, $currentUrl ) === false )
+            $originalRepositoryBaseUrl = str_replace('/classtools/definition/', '', self::$remoteUrl);
+            $originalRepositoryBaseUrl = str_replace('http://', '', $originalRepositoryBaseUrl);
+            $originalRepositoryBaseUrl = str_replace('https://', '', $originalRepositoryBaseUrl);
+            if ( $originalRepositoryUrl !== $currentUrl )
             {
                 $original = json_decode( eZHTTPTool::getDataByURL( $originalRepositoryUrl ) );
             }
             else
             {
-                throw new Exception( "Server e client non possono coincidere" );
+                throw new Exception( "Server ({$originalRepositoryBaseUrl}) e client ($currentUrl) non possono coincidere" );
             }
         }
 
