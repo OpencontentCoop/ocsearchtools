@@ -25,7 +25,7 @@ class SearchFormOperator
     public static $filters = array();
     public static $query_filters = array();
     
-    function SearchFormOperator()
+    function __construct()
     {
     }
 
