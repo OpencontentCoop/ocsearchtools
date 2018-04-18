@@ -80,7 +80,7 @@ class ocSolrDocumentFieldString extends ezfSolrDocumentFieldBase
         {
             if ( ctype_alpha( $letter ) )
             {
-                $first = $letter;
+                $first = utf8_encode($letter);
                 break;
             }
         }
