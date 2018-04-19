@@ -20,14 +20,14 @@ class SearchFormOperator
         'attribute_search_form',
         'class_search_result',
         'calendar',
-        'repository_list'
+        'repository_list',
+        'solr_field',
+        'solr_meta_field',
+        'solr_subfield',
+        'solr_meta_subfield',
     );
     public static $filters = array();
     public static $query_filters = array();
-    
-    function __construct()
-    {
-    }
 
     /*!
     Return an array with the template operator name.
@@ -58,19 +58,19 @@ class SearchFormOperator
                 'value' => array(
                     'type' => 'mixed',
                     'required' => true
-                )                
+                )
             ),
             'getFilterParameter' => array(
                 'name' => array(
                     'type' => 'string',
                     'required' => true
-                )                
+                )
             ),
             'removeFilterParameter' => array(
                 'name' => array(
                     'type' => 'string',
                     'required' => true
-                )                
+                )
             ),
             'getFilterParameters' => array(
                 'as_array' => array(
@@ -99,8 +99,7 @@ class SearchFormOperator
             'sort' => array(),
             'asort' => array(),
             'parsedate' => array(),
-            'parsedate' => array(),
-            'facet_navigation' => array(                
+            'facet_navigation' => array(
                 'base_query' => array(
                     'type' => 'array',
                     'required' => true
@@ -155,343 +154,423 @@ class SearchFormOperator
                     'type' => 'array',
                     'required' => true
                 )
-            )
+            ),
+            'solr_field' => array(
+                'identifier' => array(
+                    "type" => "string",
+                    "required" => true
+                ),
+                'type' => array(
+                    "type" => "string",
+                    "required" => true
+                )
+            ),
+            'solr_meta_field' => array(
+                'identifier' => array(
+                    "type" => "string",
+                    "required" => true
+                )
+            ),
+            'solr_subfield' => array(
+                'identifier' => array(
+                    "type" => "string",
+                    "required" => true
+                ),
+                'sub_identifier' => array(
+                    "type" => "string",
+                    "required" => true
+                ),
+                'type' => array(
+                    "type" => "string",
+                    "required" => true
+                )
+            ),
+            'solr_meta_subfield' => array(
+                'identifier' => array(
+                    "type" => "string",
+                    "required" => true
+                ),
+                'sub_identifier' => array(
+                    "type" => "string",
+                    "required" => true
+                )
+            ),
+
         );
     }
-    
+
     function modify( &$tpl, &$operatorName, &$operatorParameters, &$rootNamespace, &$currentNamespace, &$operatorValue, &$namedParameters )
     {
-		
-        switch ( $operatorName )
-        {
-            
+
+        switch ($operatorName) {
+
+            case 'solr_field':
+                {
+                    return $operatorValue = self::generateSolrField($namedParameters['identifier'],
+                        $namedParameters['type']);
+                }
+                break;
+
+            case 'solr_meta_field':
+                {
+                    return $operatorValue = self::generateSolrMetaField($namedParameters['identifier']);
+                }
+                break;
+
+            case 'solr_subfield':
+                {
+                    return $operatorValue = self::generateSolrSubField($namedParameters['identifier'],
+                        $namedParameters['sub_identifier'], $namedParameters['type']);
+                }
+                break;
+
+            case 'solr_meta_subfield':
+                {
+                    return $operatorValue = self::generateSolrSubMetaField($namedParameters['identifier'],
+                        $namedParameters['sub_identifier']);
+                }
+                break;
+
             case 'repository_list':
-            {
-                $operatorValue = OCCrossSearch::listAvailableRepositories();    
-            } break;
-            
+                {
+                    $operatorValue = OCCrossSearch::listAvailableRepositories();
+                }
+                break;
+
             case 'class_search_result':
-            {                
-                try
                 {
-                    $operatorValue = OCClassSearchFormHelper::result( $namedParameters['parameters'], $namedParameters['fields'], true );
+                    try {
+                        $operatorValue = OCClassSearchFormHelper::result($namedParameters['parameters'],
+                            $namedParameters['fields'], true);
+                    } catch (Exception $e) {
+                        eZDebug::writeError($e->getMessage(), $operatorName);
+                    }
                 }
-                catch( Exception $e )
-                {
-                    eZDebug::writeError( $e->getMessage(), $operatorName );
-                }
-            } break;
-            
+                break;
+
             case 'attribute_search_form':
-            {                
-                try
                 {
-                    $operatorValue = OCClassSearchFormHelper::displayAttribute( $namedParameters['helper'], $namedParameters['input_field'] );
+                    try {
+                        $operatorValue = OCClassSearchFormHelper::displayAttribute($namedParameters['helper'],
+                            $namedParameters['input_field']);
+                    } catch (Exception $e) {
+                        eZDebug::writeError($e->getMessage(), $operatorName);
+                    }
                 }
-                catch( Exception $e )
-                {
-                    eZDebug::writeError( $e->getMessage(), $operatorName );
-                }
-            } break;
-            
+                break;
+
             case 'class_search_form':
-            {                
-                try
                 {
-                    $operatorValue = OCClassSearchFormHelper::displayForm( $namedParameters['class_identifier'], $namedParameters['parameters'] );
+                    try {
+                        $operatorValue = OCClassSearchFormHelper::displayForm($namedParameters['class_identifier'],
+                            $namedParameters['parameters']);
+                    } catch (Exception $e) {
+                        eZDebug::writeError($e->getMessage(), $operatorName);
+                    }
                 }
-                catch( Exception $e )
-                {
-                    eZDebug::writeError( $e->getMessage(), $operatorName );
-                }
-            } break;
-            
+                break;
+
             case 'strtotime':
-            {
-                $operatorValue = strtotime( $operatorValue );
-            } break;
+                {
+                    $operatorValue = strtotime($operatorValue);
+                }
+                break;
 
             case 'calendar':
-            {
-                $data = new OCCalendarData( $namedParameters['node'] );
-                $data->setParameters( $namedParameters['parameters'] );
-                $data->fetch();
-                $operatorValue = $data->data;
-            } break;
+                {
+                    $data = new OCCalendarData($namedParameters['node']);
+                    $data->setParameters($namedParameters['parameters']);
+                    $data->fetch();
+                    $operatorValue = $data->data;
+                }
+                break;
 
             case 'facet_navigation':
-            {
-                $operatorValue = OCFacetNavgationHelper::data( $namedParameters['base_query'], $namedParameters['override'], $namedParameters['base_uri'] );                
-            } break;
-            
-            case 'setFilterParameter':
-            {
-                self::$filters[$namedParameters['name']][] = $namedParameters['value'];
-                $this->log( $namedParameters, 'setFilterParameter' );
-                $operatorValue = self::$filters[$namedParameters['name']];
-            }break;
-            
-            case 'getFilterParameter':
-            {
-                $this->getAllFilters();
-                
-                if ( isset( self::$query_filters[$namedParameters['name']] ))
                 {
-                    $this->log( $namedParameters['name'] .': ' . var_export( self::$query_filters[$namedParameters['name']], true ), 'getFilterParameter' );
-                    $operatorValue = is_array( self::$query_filters[$namedParameters['name']] ) ? self::$query_filters[$namedParameters['name']] : array( self::$query_filters[$namedParameters['name']] );                    
-                    return true;
+                    $operatorValue = OCFacetNavgationHelper::data($namedParameters['base_query'],
+                        $namedParameters['override'], $namedParameters['base_uri']);
                 }
-                $operatorValue = array();
-                return false;
-            }break;
+                break;
+
+            case 'setFilterParameter':
+                {
+                    self::$filters[$namedParameters['name']][] = $namedParameters['value'];
+                    $this->log($namedParameters, 'setFilterParameter');
+                    $operatorValue = self::$filters[$namedParameters['name']];
+                }
+                break;
+
+            case 'getFilterParameter':
+                {
+                    $this->getAllFilters();
+
+                    if (isset(self::$query_filters[$namedParameters['name']])) {
+                        $this->log($namedParameters['name'] . ': ' . var_export(self::$query_filters[$namedParameters['name']],
+                                true), 'getFilterParameter');
+                        $operatorValue = is_array(self::$query_filters[$namedParameters['name']]) ? self::$query_filters[$namedParameters['name']] : array(self::$query_filters[$namedParameters['name']]);
+
+                        return true;
+                    }
+                    $operatorValue = array();
+
+                    return false;
+                }
+                break;
 
             case 'removeFilterParameter':
-            {
-                $this->getAllFilters();
-                
-                if ( isset( self::$query_filters[$namedParameters['name']] ))
                 {
-                    self::$query_filters[$namedParameters['name']] = array();
-                    return true;
+                    $this->getAllFilters();
+
+                    if (isset(self::$query_filters[$namedParameters['name']])) {
+                        self::$query_filters[$namedParameters['name']] = array();
+
+                        return true;
+                    }
+
+                    return false;
                 }
-                return false;
-            }break;
-            
+                break;
+
             case 'getFilterParameters':
-            {
-                $http = eZHTTPTool::instance();
-                $this->getAllFilters();
-                $filterList = self::$query_filters;
-                if ( $namedParameters['as_array'] )
                 {
-                    $operatorValue = $filterList;
-                    return;
-                }
-                $filterSearchHash = array();
-                if ( $namedParameters['cond'] )
-                {
-                    $filterSearchHash[] = $namedParameters['cond'];
-                }
-                foreach( $filterList as $name => $value )
-                {
-                    if ( count($value) > 1 )
-                    {
-                        $temp_array = array( 'or' );
-                        foreach ( $value as $v )
-                        {
-                            $temp_array[] = $name . ':' . $v;
+                    $http = eZHTTPTool::instance();
+                    $this->getAllFilters();
+                    $filterList = self::$query_filters;
+                    if ($namedParameters['as_array']) {
+                        $operatorValue = $filterList;
+
+                        return;
+                    }
+                    $filterSearchHash = array();
+                    if ($namedParameters['cond']) {
+                        $filterSearchHash[] = $namedParameters['cond'];
+                    }
+                    foreach ($filterList as $name => $value) {
+                        if (count($value) > 1) {
+                            $temp_array = array('or');
+                            foreach ($value as $v) {
+                                $temp_array[] = $name . ':' . $v;
+                            }
+                            $filterSearchHash[] = $temp_array;
+                        } else {
+                            $filterSearchHash[] = $name . ':' . $value[0];
                         }
-                        $filterSearchHash[] = $temp_array;
                     }
-                    else
-                    {                        
-                        $filterSearchHash[] = $name . ':' . $value[0];
-                    }
+                    $this->log($filterSearchHash, 'getFilterParameters');
+                    $operatorValue = $filterSearchHash;
                 }
-                $this->log( $filterSearchHash, 'getFilterParameters' );
-                $operatorValue = $filterSearchHash;
-            } break;
-			
+                break;
+
             case 'getFilterUrlSuffix':
-            {
-                $filterSearchHash = $operatorValue;
-                $urlSuffix = '';
-                $tempArray = array();
-                foreach( $filterSearchHash as $filter )
                 {
-                    if ( is_array( $filter ) )
-                    {
-                        foreach( $filter as $f )
-                        {
-                            if ( ( 'and' != $f ) and ( 'or' != $f ) )
-                            {
-                                if ( !in_array( $f, $tempArray ) )
-                                {
-                                    $tempArray[] = $f;
-                                    $urlSuffix .= '&filter[]=' . rawurlencode( $f );
+                    $filterSearchHash = $operatorValue;
+                    $urlSuffix = '';
+                    $tempArray = array();
+                    foreach ($filterSearchHash as $filter) {
+                        if (is_array($filter)) {
+                            foreach ($filter as $f) {
+                                if (( 'and' != $f ) and ( 'or' != $f )) {
+                                    if (!in_array($f, $tempArray)) {
+                                        $tempArray[] = $f;
+                                        $urlSuffix .= '&filter[]=' . rawurlencode($f);
+                                    }
                                 }
+                            }
+                        } else {
+                            if (!in_array($filter, $tempArray)) {
+                                $tempArray[] = $filter;
+                                $urlSuffix .= '&filter[]=' . rawurlencode($filter);
                             }
                         }
                     }
-                    else
-                    {
-                        if ( !in_array( $filter, $tempArray ) )
-                        {                        
-                            $tempArray[] = $filter;
-                            $urlSuffix .= '&filter[]=' . rawurlencode( $filter );
-                        }
-                    }
+                    $operatorValue = $urlSuffix;
+
                 }
-                $operatorValue = $urlSuffix;
-                
-            } break;
+                break;
 
             case 'getFilterHiddenInput':
-            {
-                $filterSearchHash = $operatorValue;
-                $input = array();
-                $tempArray = array();
-                foreach( $filterSearchHash as $filter )
                 {
-                    if ( is_array( $filter ) )
-                    {
-                        foreach( $filter as $f )
-                        {
-                            if ( ( 'and' != $f ) and ( 'or' != $f ) )
-                            {
-                                if ( !in_array( $f, $tempArray ) )
-                                {
-                                    $tempArray[] = $f;
-                                    $input[] = $f;
+                    $filterSearchHash = $operatorValue;
+                    $input = array();
+                    $tempArray = array();
+                    foreach ($filterSearchHash as $filter) {
+                        if (is_array($filter)) {
+                            foreach ($filter as $f) {
+                                if (( 'and' != $f ) and ( 'or' != $f )) {
+                                    if (!in_array($f, $tempArray)) {
+                                        $tempArray[] = $f;
+                                        $input[] = $f;
+                                    }
                                 }
+                            }
+                        } else {
+                            if (!in_array($filter, $tempArray)) {
+                                $tempArray[] = $filter;
+                                $input[] = $filter;
                             }
                         }
                     }
-                    else
-                    {
-                        if ( !in_array( $filter, $tempArray ) )
-                        {
-                            $tempArray[] = $filter;
-                            $input[] = $filter;
-                        }
+
+                    $html = '';
+                    foreach ($input as $i) {
+                        $html .= "<input type='hidden' name='filter[]' value='$i' />";
                     }
+
+                    $operatorValue = $html;
+
                 }
+                break;
 
-                $html = '';
-                foreach( $input as $i )
-                {
-                    $html .= "<input type='hidden' name='filter[]' value='$i' />";
-                }
-
-                $operatorValue = $html;
-
-            } break;
-            
             case 'addQuoteOnFilter':
-            {
-                $tempVar = $operatorValue;
-                list( $name, $value ) = explode( ':', $tempVar );
-                $operatorValue = $name . ':"'. $value . '"';                
-            } break;
-            
-            case 'in_array_r':
-            {                
-                if ( $this->recursiveArraySearch( $namedParameters['needle'], $namedParameters['haystack'] ) !== false )
                 {
-                    $operatorValue = true;                    
-                    return true;
+                    $tempVar = $operatorValue;
+                    list($name, $value) = explode(':', $tempVar);
+                    $operatorValue = $name . ':"' . $value . '"';
                 }
-                $operatorValue = false;                
-                return false;
-                
-            } break;
-            
+                break;
+
+            case 'in_array_r':
+                {
+                    if ($this->recursiveArraySearch($namedParameters['needle'],
+                            $namedParameters['haystack']) !== false) {
+                        $operatorValue = true;
+
+                        return true;
+                    }
+                    $operatorValue = false;
+
+                    return false;
+
+                }
+                break;
+
             case 'sort':
-            {
-                sort( $operatorValue );                
-            }break;
+                {
+                    sort($operatorValue);
+                }
+                break;
 
             case 'asort':
-            {
-                asort( $operatorValue );                
-            }break;
-            
+                {
+                    asort($operatorValue);
+                }
+                break;
+
             case 'parsedate':
-            {
-                $operatorValue = str_replace('"', '', $operatorValue );
-                if ( DateTime::createFromFormat( "Y-m-d\TH:i:sP", $operatorValue ) )
                 {
-                    $operatorValue = DateTime::createFromFormat( "Y-m-d\TH:i:sP", $operatorValue )->format ("U");
+                    $operatorValue = str_replace('"', '', $operatorValue);
+                    if (DateTime::createFromFormat("Y-m-d\TH:i:sP", $operatorValue)) {
+                        $operatorValue = DateTime::createFromFormat("Y-m-d\TH:i:sP", $operatorValue)->format("U");
+                    } else {
+                        eZDebug::writeError($operatorValue . ': ' . var_export(DateTime::getLastErrors(), 1),
+                            'parsedate');
+                        $operatorValue = 0;
+
+                    }
                 }
-                else
-                {
-                    eZDebug::writeError( $operatorValue . ': ' . var_export( DateTime::getLastErrors(), 1 ), 'parsedate' );
-                    $operatorValue = 0;
-                    
-                }
-            }break;
-            
+                break;
+
             default:
-            break;
+                break;
         }
     }
-    
+
     private function recursiveArraySearch($needle, $haystack, $index = null)
     {
-        if ( is_array($haystack) )
-        {
+        if (is_array($haystack)) {
             $aIt = new RecursiveArrayIterator($haystack);
-            $it  = new RecursiveIteratorIterator($aIt);
-           
-            while($it->valid())
-            {       
-                if (((isset($index) AND ($it->key() == $index)) OR (!isset($index))) AND ($it->current() == $needle))
-                {
+            $it = new RecursiveIteratorIterator($aIt);
+
+            while ($it->valid()) {
+                if (( ( isset($index) AND ( $it->key() == $index ) ) OR ( !isset($index) ) ) AND ( $it->current() == $needle )) {
                     return $aIt->key();
                 }
-               
+
                 $it->next();
             }
         }
-       
+
         return false;
     }
-    
+
     private function getAllFilters()
     {
         $http = eZHTTPTool::instance();
         $filterList = array();
-        if ( $http->hasGetVariable( 'filter' ) )
-        {
-            foreach( $http->getVariable( 'filter' ) as $key => $filterCond )
-            {
-                if ( $filterCond == '' ) continue;
-                
-                if ( !is_integer( $key ) )
-                {
-                    if ( !empty( $filterCond ) )
-                    {
-                        if ( is_array($filterCond) )
-                        {
-                            foreach( $filterCond as $fC)
-                            {
+        if ($http->hasGetVariable('filter')) {
+            foreach ($http->getVariable('filter') as $key => $filterCond) {
+                if ($filterCond == '') {
+                    continue;
+                }
+
+                if (!is_integer($key)) {
+                    if (!empty($filterCond)) {
+                        if (is_array($filterCond)) {
+                            foreach ($filterCond as $fC) {
                                 $filterList[$key][] = $fC;
                             }
-                        }
-                        else
-                        {
+                        } else {
                             $filterList[$key][] = $filterCond;
                         }
                     }
-                }
-                else
-                {
-                    $filterCondParts = explode( ':', $filterCond );
-                    if ( !empty( $filterCondParts[1] ) )
-                    {
-                        $name = array_shift( $filterCondParts );
-                        $filterList[$name][] = implode( ':', $filterCondParts );
+                } else {
+                    $filterCondParts = explode(':', $filterCond);
+                    if (!empty($filterCondParts[1])) {
+                        $name = array_shift($filterCondParts);
+                        $filterList[$name][] = implode(':', $filterCondParts);
                     }
                 }
             }
-        }                
-
-        foreach( self::$filters as $name => $filterArray )
-        {
-            if ( isset( $filterList[$name] ) )
-                $filterList[$name] = array_merge($filterList[$name], self::$filters[$name]);
-            else
-                $filterList[$name] = self::$filters[$name];
         }
-        
+
+        foreach (self::$filters as $name => $filterArray) {
+            if (isset($filterList[$name])) {
+                $filterList[$name] = array_merge($filterList[$name], self::$filters[$name]);
+            } else {
+                $filterList[$name] = self::$filters[$name];
+            }
+        }
+
         self::$query_filters = $filterList;
     }
 
-    private function log( $message, $label )
+    private function log($message, $label)
     {
-        eZDebug::writeNotice( $message, $label );
+        eZDebug::writeNotice($message, $label);
     }
-    
-}
 
-?>
+    private static function generateSolrField($identifier, $type)
+    {
+        $DocumentFieldName = new ezfSolrDocumentFieldName();
+
+        return $DocumentFieldName->lookupSchemaName(ezfSolrDocumentFieldBase::ATTR_FIELD_PREFIX . $identifier, $type);
+    }
+
+    private static function generateSolrSubMetaField($identifier, $subIdentifier)
+    {
+        $DocumentFieldName = new ezfSolrDocumentFieldName();
+
+        return $DocumentFieldName->lookupSchemaName(
+            ezfSolrDocumentFieldBase::SUBMETA_FIELD_PREFIX . $identifier .
+            ezfSolrDocumentFieldBase::SUBATTR_FIELD_SEPARATOR . $subIdentifier .
+            ezfSolrDocumentFieldBase::SUBATTR_FIELD_SEPARATOR,
+            eZSolr::getMetaAttributeType($subIdentifier, 'filter'));
+    }
+
+    private static function generateSolrSubField($identifier, $subIdentifier, $type)
+    {
+        $DocumentFieldName = new ezfSolrDocumentFieldName();
+
+        return $DocumentFieldName->lookupSchemaName(
+            ezfSolrDocumentFieldBase::SUBATTR_FIELD_PREFIX . $identifier .
+            ezfSolrDocumentFieldBase::SUBATTR_FIELD_SEPARATOR . $subIdentifier .
+            ezfSolrDocumentFieldBase::SUBATTR_FIELD_SEPARATOR,
+            $type);
+    }
+
+    private static function generateSolrMetaField($identifier)
+    {
+        return ezfSolrDocumentFieldBase::generateMetaFieldName($identifier, 'filter');
+    }
+
+}

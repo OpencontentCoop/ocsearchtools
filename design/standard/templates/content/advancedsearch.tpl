@@ -125,7 +125,7 @@ END DEBUG
                                             'filter', $filterParameters,
                                             'publish_date',$search_date,
                                             'limit',$page_limit,
-                                            'sort_by', hash('attr_anno_s', 'asc', 'attr_mese_s', 'asc')
+                                            'sort_by', hash(solr_field('anno', 'string'), 'asc', solr_field('mese', 'string'), 'asc')
                                         )
                     }
                     {set $search=fetch( ezfind, search, $search_hash)}

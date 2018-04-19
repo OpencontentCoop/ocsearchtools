@@ -19,7 +19,11 @@ $eZTemplateOperatorArray[] = array(
         'attribute_search_form',
         'class_search_result',
         'calendar',
-        'repository_list'
+        'repository_list',
+        'solr_field',
+        'solr_meta_field',
+        'solr_subfield',
+        'solr_meta_subfield',
     )
 );
 
