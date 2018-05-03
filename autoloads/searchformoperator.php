@@ -539,14 +539,14 @@ class SearchFormOperator
         eZDebug::writeNotice($message, $label);
     }
 
-    private static function generateSolrField($identifier, $type)
+    public static function generateSolrField($identifier, $type)
     {
         $DocumentFieldName = new ezfSolrDocumentFieldName();
 
         return $DocumentFieldName->lookupSchemaName(ezfSolrDocumentFieldBase::ATTR_FIELD_PREFIX . $identifier, $type);
     }
 
-    private static function generateSolrSubMetaField($identifier, $subIdentifier)
+    public static function generateSolrSubMetaField($identifier, $subIdentifier)
     {
         $DocumentFieldName = new ezfSolrDocumentFieldName();
 
@@ -557,7 +557,7 @@ class SearchFormOperator
             eZSolr::getMetaAttributeType($subIdentifier, 'filter'));
     }
 
-    private static function generateSolrSubField($identifier, $subIdentifier, $type)
+    public static function generateSolrSubField($identifier, $subIdentifier, $type)
     {
         $DocumentFieldName = new ezfSolrDocumentFieldName();
 
@@ -568,7 +568,7 @@ class SearchFormOperator
             $type);
     }
 
-    private static function generateSolrMetaField($identifier)
+    public static function generateSolrMetaField($identifier)
     {
         return ezfSolrDocumentFieldBase::generateMetaFieldName($identifier, 'filter');
     }
