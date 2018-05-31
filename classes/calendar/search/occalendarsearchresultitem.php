@@ -58,7 +58,7 @@ abstract class OCCalendarSearchResultItem extends OCCalendarItem implements Arra
         }
         $this->data['fromDateTime'] = $fromDate;
         $this->data['from'] = $fromDate->getTimestamp();
-        $this->data['identifier'] = $fromDate->format( OpenPACalendarData::FULLDAY_IDENTIFIER_FORMAT );
+        $this->data['identifier'] = $fromDate->format( OCCalendarData::FULLDAY_IDENTIFIER_FORMAT );
 
         if ( isset( $this->rawResult['fields']['attr_to_time_dt'] ) )
         {
