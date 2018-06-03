@@ -3,7 +3,7 @@
 class ocSolrDocumentFieldString extends ezfSolrDocumentFieldBase
 {
     
-    const DEFAULT_SUBATTRIBUTE_TYPE = 'text';
+    const DEFAULT_SUBATTRIBUTE_TYPE = 'string';
 
     function __construct( eZContentObjectAttribute $attribute )
     {
