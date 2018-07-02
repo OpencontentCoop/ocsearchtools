@@ -63,6 +63,27 @@ $ViewList['relations'] = array(
     'unordered_params' => array()
 );
 
+$ViewList['extra_definition'] = array(
+    'functions' => array( 'definition' ),
+    'script' => 'extra_definition.php',
+    'ui_context' => 'edit',
+    'default_navigation_part' => 'ezsetupnavigationpart',
+    'params' => array( 'ID' ),
+    'unordered_params' => array()
+);
+
+$ViewList['extra_compare'] = array(
+    'functions' => array( 'class' ),
+    'script' => 'extra_compare.php',
+    'ui_context' => 'edit',
+    'default_navigation_part' => 'ezsetupnavigationpart',
+    'params' => array( 'ID' ),
+    'single_post_actions' => array(
+        'SyncButton' => 'Sync'
+    ),
+    'unordered_params' => array()
+);
+
 
 $FunctionList['definition'] = array();
 $FunctionList['class'] = array();

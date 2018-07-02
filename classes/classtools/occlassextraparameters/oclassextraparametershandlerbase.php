@@ -31,6 +31,12 @@ abstract class OCClassExtraParametersHandlerBase implements OCClassExtraParamete
             $this->parameters = (array)OCClassExtraParameters::fetchByHandlerAndClassIdentifier( $this->getIdentifier(), $this->class->Identifier );
     }
 
+    public function getParameters()
+    {
+        $this->loadParameters();
+        return $this->parameters;
+    }
+
     public function storeParameters( $data )
     {
         if ( OCClassExtraParametersManager::currentUserCanEditHandlers( $this->getIdentifier() ) )

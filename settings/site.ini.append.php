@@ -11,7 +11,7 @@ PolicyOmitList[]=ocsearch/action
 PolicyOmitList[]=repository/server
 PolicyOmitList[]=datatable/view
 PolicyOmitList[]=classtools/definition
-
+PolicyOmitList[]=classtools/extra_definition
 
 [Cache]
 CacheItems[]=calendartaxonomy
