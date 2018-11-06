@@ -399,6 +399,12 @@ class ocSolrDocumentFieldObjectRelation extends ezfSolrDocumentFieldBase
                             continue;
                         }
                     }
+
+                    if ( !$subObject instanceof eZContentObjectVersion )
+                    {
+                        continue;
+                    }
+                    
                     /** @var eZContentObject $subContentObject */
                     $subContentObject = $subObject->attribute( 'contentobject' );
 
