@@ -18,6 +18,12 @@ class ocSolrDocumentFieldString extends ezfSolrDocumentFieldBase
             {
                 if ( $subAttribute and $subAttribute !== '' )
                 {
+                    if ($subAttribute == 'start_end'){
+                        return parent::generateSubattributeFieldName( $classAttribute,
+                                                                      $subAttribute,
+                                                                      'text' );
+                    }
+
                     // A subattribute was passed
                     return parent::generateSubattributeFieldName( $classAttribute,
                                                                   $subAttribute,
@@ -60,12 +66,24 @@ class ocSolrDocumentFieldString extends ezfSolrDocumentFieldBase
         $fieldNameArray = array();
         foreach ( array_keys( eZSolr::$fieldTypeContexts ) as $context )
         {
-            $fieldNameArray[] = self::getFieldName( $contentClassAttribute, 'start_letter', $context );
+            $fieldNameArray[] = self::getFieldName( $contentClassAttribute, 'start_letter', $context );            
         }
         $fieldNameArray = array_unique( $fieldNameArray );
         foreach ( $fieldNameArray as $fieldName )
         {
             $fields[$fieldName] = $this->preProcessValue( $this->getFirstAlpha( $metaData ),
+                                                          self::getClassAttributeType( $contentClassAttribute ) );
+        }
+
+        $fieldNameArray = array();
+        foreach ( array_keys( eZSolr::$fieldTypeContexts ) as $context )
+        {
+            $fieldNameArray[] = self::getFieldName( $contentClassAttribute, 'start_end', $context );            
+        }
+        $fieldNameArray = array_unique( $fieldNameArray );
+        foreach ( $fieldNameArray as $fieldName )
+        {
+            $fields[$fieldName] = $this->preProcessValue( $this->getStartEnd( $metaData ),
                                                           self::getClassAttributeType( $contentClassAttribute ) );
         }
         
@@ -85,6 +103,14 @@ class ocSolrDocumentFieldString extends ezfSolrDocumentFieldBase
             }
         }
         return $first;
+    }
+
+    protected function getStartEnd( $string )
+    {
+        if (empty($string)){
+            return '';
+        }
+        return '__START__' . trim($string) . '__END__';
     }
 }
 
