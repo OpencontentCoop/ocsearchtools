@@ -131,13 +131,16 @@ class OCClassSearchFormFetcher
             }
             elseif ( $key == 'class_id' )
             {
-                $this->currentParameters[$key] = $value;
-                $this->addFetchField( array(
-                    'name' => ezpI18n::tr( 'extension/ezfind/facets', 'Content type' ),
-                    'value' => eZContentClass::fetch( $value )->attribute( 'name' ),
-                    'remove_view_parameters' => $this->getViewParametersString( array( $key ) )
-                ) );
-                $this->isFetch = true;
+                $class = eZContentClass::fetch( (int)$value );
+                if($class instanceof eZContentClass){
+                    $this->currentParameters[$key] = $value;
+                    $this->addFetchField( array(
+                        'name' => ezpI18n::tr( 'extension/ezfind/facets', 'Content type' ),
+                        'value' => $class->attribute( 'name' ),
+                        'remove_view_parameters' => $this->getViewParametersString( array( $key ) )
+                    ) );
+                    $this->isFetch = true;
+                }
             }
             elseif ( $key == 'publish_date' )
             {
