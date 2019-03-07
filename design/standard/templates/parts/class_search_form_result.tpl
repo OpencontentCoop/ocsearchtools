@@ -2,7 +2,7 @@
 <p class="navigation">
   {foreach $data.fields as $field}
   <a class="btn btn-xs btn-info" href={concat( $page_url, $field.remove_view_parameters )|ezurl()}>
-	<i class="fa fa-close"></i> <strong>{$field.name}:</strong> {$field.value}
+	<i class="fa fa-close"></i> <strong>{$field.name|wash()}:</strong> {$field.value|wash()}
   </a>
   {/foreach}
   <a class="btn btn-xs btn-danger" href={$page_url|ezurl()}>Annulla ricerca</a>
