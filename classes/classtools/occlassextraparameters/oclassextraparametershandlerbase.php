@@ -95,7 +95,8 @@ abstract class OCClassExtraParametersHandlerBase implements OCClassExtraParamete
             'name',
             'enabled',
             'class_edit_template_url',
-            'attribute_edit_template_url'
+            'attribute_edit_template_url',
+            'handle_attributes'
         );
     }
 
@@ -125,6 +126,9 @@ abstract class OCClassExtraParametersHandlerBase implements OCClassExtraParamete
 
             case 'attribute_edit_template_url':
                 return $this->attributeEditTemplateUrl();
+
+            case 'handle_attributes':
+                return $this->handleAttributes();
 
             default:
                 eZDebug::writeError( "Attribute $key not found", __METHOD__ );
@@ -173,4 +177,11 @@ abstract class OCClassExtraParametersHandlerBase implements OCClassExtraParamete
         return $data;
     }
 
+    /**
+     * @return bool
+     */
+    protected function handleAttributes()
+    {
+        return true;
+    }
 }

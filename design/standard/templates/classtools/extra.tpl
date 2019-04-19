@@ -44,7 +44,7 @@
             {include uri=$handler.class_edit_template_url handler=$handler class=$class}
         </div>
 
-        {if $handler.identifier|ne($class.identifier)}
+        {if $handler.handle_attributes}
             <table width="100%" cellspacing="0" cellpadding="0" border="0" class="table list">
                 <tbody>
                 {foreach $class.data_map as $attribute}
