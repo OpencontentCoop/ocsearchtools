@@ -193,6 +193,11 @@ class SearchFormOperator
                 'sub_identifier' => array(
                     "type" => "string",
                     "required" => true
+                ),
+                'type' => array(
+                    "type" => "string", 
+                    "required" => false, 
+                    "default" => null
                 )
             ),
 
@@ -227,7 +232,7 @@ class SearchFormOperator
             case 'solr_meta_subfield':
                 {
                     return $operatorValue = self::generateSolrSubMetaField($namedParameters['identifier'],
-                        $namedParameters['sub_identifier']);
+                        $namedParameters['sub_identifier'], $namedParameters['type']);
                 }
                 break;
 
@@ -546,7 +551,7 @@ class SearchFormOperator
         return $DocumentFieldName->lookupSchemaName(ezfSolrDocumentFieldBase::ATTR_FIELD_PREFIX . $identifier, $type);
     }
 
-    public static function generateSolrSubMetaField($identifier, $subIdentifier)
+    public static function generateSolrSubMetaField($identifier, $subIdentifier, $type = null)
     {
         $DocumentFieldName = new ezfSolrDocumentFieldName();
 
@@ -554,7 +559,8 @@ class SearchFormOperator
             ezfSolrDocumentFieldBase::SUBMETA_FIELD_PREFIX . $identifier .
             ezfSolrDocumentFieldBase::SUBATTR_FIELD_SEPARATOR . $subIdentifier .
             ezfSolrDocumentFieldBase::SUBATTR_FIELD_SEPARATOR,
-            eZSolr::getMetaAttributeType($subIdentifier, 'filter'));
+            $type ? $type :eZSolr::getMetaAttributeType($subIdentifier, 'filter')
+        );
     }
 
     public static function generateSolrSubField($identifier, $subIdentifier, $type)
