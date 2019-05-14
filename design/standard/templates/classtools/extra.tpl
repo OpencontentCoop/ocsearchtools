@@ -44,20 +44,20 @@
             {include uri=$handler.class_edit_template_url handler=$handler class=$class}
         </div>
 
-
-
-        <table width="100%" cellspacing="0" cellpadding="0" border="0" class="table list">
-            <tbody>
-            {foreach $class.data_map as $attribute}
-                <tr id="{$attribute.identifier}">
-                    <th style="vertical-align: middle;width: 20%">
-                        {$attribute.name} ({$attribute.identifier})
-                    </th>
-                    {include uri=$handler.attribute_edit_template_url handler=$handler class=$class attribute=$attribute}
-                </tr>
-            {/foreach}
-            </tbody>
-        </table>
+        {if $handler.handle_attributes}
+            <table width="100%" cellspacing="0" cellpadding="0" border="0" class="table list">
+                <tbody>
+                {foreach $class.data_map as $attribute}
+                    <tr id="{$attribute.identifier}">
+                        <th style="vertical-align: middle;width: 20%">
+                            {$attribute.name} ({$attribute.identifier})
+                        </th>
+                        {include uri=$handler.attribute_edit_template_url handler=$handler class=$class attribute=$attribute}
+                    </tr>
+                {/foreach}
+                </tbody>
+            </table>
+        {/if}
         <input type="submit" class="extra_parameters_handlers defaultbutton btn btn-success pull-right object-right" name="StoreExtraParameters" value="Salva impostazioni" />
     </form>
 
