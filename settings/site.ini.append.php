@@ -35,4 +35,8 @@ path=calendarquery
 isClustered=true
 class=OCCachedSearchQuery
 
+[Event]
+Listeners[]=classtools/property_is_equal@OCClassToolsFilters::propertyIsEqual
+Listeners[]=classtools/sync_class_attribute@OCClassToolsFilters::filterOriginalAttribute
+
 */?>

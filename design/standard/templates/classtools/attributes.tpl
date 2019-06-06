@@ -8,35 +8,48 @@ $(document).ready(function() {
 {/literal}
 </script>
 <style>
+th, td {ldelim}
+	font-size: .7em;
+{rdelim}
+td p.description {ldelim}
+	font-size: .7em;
+	margin: 0;
+	font-style: italic;
+{rdelim}
 tbody tr:nth-child(even) {ldelim}
     background-color: #f2f2f2
 {rdelim}}
 </style>
+
+<h1>Attributi di classe</h1>
+
+<div class="table-responsive">
 <table id="class-list" class="list sort" cellspacing="0">
 	<thead>
 		<tr>
-		    <th>Classe</th>
+			<th>Gruppo di classe</th>
+			<th>Classe</th>
 		    <th>Identificatore di classe</th>
-		    <th>Gruppo di classe</th>
 		    <th>Attributo</th>
 		    <th>Identificatore</th>
-		    <th>Descrizione</th>
 		    <th>Datatype</th>
 		    <th>Categoria</th>		    
 		</tr>
 	</thead>
 	{foreach $attributes as $attribute}
 		<tr>
-			<td>{$class_by_id[$attribute.contentclass_id].name|wash()}</td>
-			<td>{$class_by_id[$attribute.contentclass_id].identifier}</td>
 			<td>
 				{foreach $class_by_id[$attribute.contentclass_id].ingroup_list as $group}
 					{$group.group_name|wash()}{delimiter}, {/delimiter}
 				{/foreach}
 			</td>
-			<td>{$attribute.name|wash()}</td>
+			<td>{$class_by_id[$attribute.contentclass_id].name|wash()}</td>
+			<td>{$class_by_id[$attribute.contentclass_id].identifier}</td>
+			<td>
+				{$attribute.name|wash()}
+				<p class="description">{$attribute.description|wash()}</p>
+			</td>
 			<td>{$attribute.identifier}</td>
-			<td>{$attribute.description|wash()}</td>
 			<td>{$attribute.data_type_string}</td>
 			<td>{$attribute.category|wash()}</td>
 		</tr>
@@ -44,3 +57,4 @@ tbody tr:nth-child(even) {ldelim}
 	<tbody>
 	</tbody>
 </table>
+</div>
