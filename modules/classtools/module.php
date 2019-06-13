@@ -9,20 +9,24 @@ $Module = array(
 $ViewList = array();
 
 $ViewList['compare'] = array(
-    'functions' => array( 'class' ),
+    'functions' => array( 'compare' ),
     'script' => 'compare.php',
     'ui_context' => 'edit',
     'default_navigation_part' => 'ezsetupnavigationpart',
     'single_post_actions' => array(
         'SyncButton' => 'Sync',
-        'InstallButton' => 'Install'
+        'InstallButton' => 'Install',
+        'SyncPropertyButton' => 'SyncProperty',
+        'SyncAttributeButton' => 'SyncAttribute',
+        'RemoveAttributeButton' => 'RemoveAttribute',
+        'AddAttributeButton' => 'AddAttribute'
     ),
     'params' => array( 'ID' ),
     'unordered_params' => array()
 );
 
 $ViewList['compare_overview'] = array(
-    'functions' => array( 'class' ),
+    'functions' => array( 'compare' ),
     'script' => 'compare_overview.php',
     'ui_context' => 'edit',
     'default_navigation_part' => 'ezsetupnavigationpart',
@@ -73,7 +77,7 @@ $ViewList['extra_definition'] = array(
 );
 
 $ViewList['extra_compare'] = array(
-    'functions' => array( 'class' ),
+    'functions' => array( 'compare' ),
     'script' => 'extra_compare.php',
     'ui_context' => 'edit',
     'default_navigation_part' => 'ezsetupnavigationpart',
@@ -84,6 +88,14 @@ $ViewList['extra_compare'] = array(
     'unordered_params' => array()
 );
 
+$ViewList['attributes'] = array(
+    'functions' => array( 'definition' ),
+    'script' => 'attributes.php',
+    'params' => array(),
+    'default_navigation_part' => 'ezsetupnavigationpart',
+    'unordered_params' => array()
+);
 
 $FunctionList['definition'] = array();
 $FunctionList['class'] = array();
+$FunctionList['compare'] = array();

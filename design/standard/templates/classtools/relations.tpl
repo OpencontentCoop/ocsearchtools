@@ -90,7 +90,7 @@ $("ul.current .{$current.identifier}").plumb({ldelim}target:'end-connect-{$curre
 {if $class.name}
 <ul class="table class-{$class.identifier}">
 	<li class="title_table" id="end-connect-{$class.identifier}">
-    <a href={concat('openpa/relations/', $class.identifier)|ezurl}><b>{$class.name|wash()}</b></a>
+    <a href={concat('classtools/relations/', $class.identifier)|ezurl}><b>{$class.name|wash()}</b></a>
     <br /><small>{foreach $class.ingroup_list as $group}{$group.group_name|wash()}{delimiter}, {/delimiter}{/foreach}</small>
   </li>
 	<li>
@@ -154,7 +154,7 @@ $("ul.current .{$current.identifier}").plumb({ldelim}target:'end-connect-{$curre
 {if $class.name}
 <ul class="table class-{$class.identifier}">
 	<li class="title_table" id="end-connect-{$class.identifier}">
-    <a href={concat('openpa/relations/', $class.identifier)|ezurl}><b>{$class.name|wash()}</b></a>
+    <a href={concat('classtools/relations/', $class.identifier)|ezurl}><b>{$class.name|wash()}</b></a>
     <br /><small>{foreach $class.ingroup_list as $group}{$group.group_name|wash()}{delimiter}, {/delimiter}{/foreach}</small>
   </li>
 	<li>
