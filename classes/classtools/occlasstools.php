@@ -339,8 +339,9 @@ class OCClassTools
         }
         if (!$removeExtras) {
             foreach ($this->extraContentObjectAttributes as $extra) {
-                $extra->setAttribute('placement', count($attributes) + 1);
-                $attributes[] = $extra;
+                $extraLocaleAttribute = $this->currentAttributes[$extra->attribute('identifier')];
+                $extraLocaleAttribute->setAttribute( 'placement', count( $attributes ) + 1 );
+                $attributes[] = $extraLocaleAttribute;
             }
         }
 
