@@ -154,32 +154,34 @@ class OCClassToolsFilters
             'class_constraint_list' => array(),
             'default_placement' => false
         );
-        $root = $doc->documentElement;
-        $objectPlacement = $root->getElementsByTagName('contentobject-placement')->item(0);
+        if ($success){
+            $root = $doc->documentElement;
+            $objectPlacement = $root->getElementsByTagName('contentobject-placement')->item(0);
 
-        if ($objectPlacement and $objectPlacement->hasAttributes()) {
-            $nodeID = $objectPlacement->getAttribute('node-id');
-            $content['default_placement'] = array('node_id' => $nodeID);
-        }
-        $constraints = $root->getElementsByTagName('constraints')->item(0);
-        if ($constraints) {
-            $allowedClassList = $constraints->getElementsByTagName('allowed-class');
-            /** @var DOMElement $allowedClass */
-            foreach ($allowedClassList as $allowedClass) {
-                $content['class_constraint_list'][] = $allowedClass->getAttribute('contentclass-identifier');
+            if ($objectPlacement and $objectPlacement->hasAttributes()) {
+                $nodeID = $objectPlacement->getAttribute('node-id');
+                $content['default_placement'] = array('node_id' => $nodeID);
             }
-        }
-        $type = $root->getElementsByTagName('type')->item(0);
-        if ($type) {
-            $content['type'] = $type->getAttribute('value');
-        }
-        $selectionType = $root->getElementsByTagName('selection_type')->item(0);
-        if ($selectionType) {
-            $content['selection_type'] = $selectionType->getAttribute('value');
-        }
-        $objectClass = $root->getElementsByTagName('object_class')->item(0);
-        if ($objectClass) {
-            $content['object_class'] = $objectClass->getAttribute('value');
+            $constraints = $root->getElementsByTagName('constraints')->item(0);
+            if ($constraints) {
+                $allowedClassList = $constraints->getElementsByTagName('allowed-class');
+                /** @var DOMElement $allowedClass */
+                foreach ($allowedClassList as $allowedClass) {
+                    $content['class_constraint_list'][] = $allowedClass->getAttribute('contentclass-identifier');
+                }
+            }
+            $type = $root->getElementsByTagName('type')->item(0);
+            if ($type) {
+                $content['type'] = $type->getAttribute('value');
+            }
+            $selectionType = $root->getElementsByTagName('selection_type')->item(0);
+            if ($selectionType) {
+                $content['selection_type'] = $selectionType->getAttribute('value');
+            }
+            $objectClass = $root->getElementsByTagName('object_class')->item(0);
+            if ($objectClass) {
+                $content['object_class'] = $objectClass->getAttribute('value');
+            }
         }
 
         return $content;
