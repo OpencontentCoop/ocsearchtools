@@ -146,7 +146,7 @@ class OCClassToolsFilters
     private static function parseRelationListXML($remoteProperty)
     {
         $doc = new DOMDocument('1.0', 'utf-8');
-        $doc->loadXML($remoteProperty);
+        $success = $doc->loadXML($remoteProperty);
 
         $content = array('object_class' => '',
             'selection_type' => 0,
