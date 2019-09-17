@@ -16,11 +16,11 @@
      $facets = cond( is_set( $params.facets ), $params.facets, array() )
      $view_parameters = cond( is_set( $params.view_parameters ), $params.view_parameters, array() )
      $default_filters = cond( is_set( $params.default_filters ), $params.default_filters, array() )
-     $dateFilter = cond( and( $params.useDateFilter, is_set( $view_parameters.dateFilter ), $view_parameters.dateFilter|gt( 0 ), $view_parameters.dateFilter|lt( 6 ) ), $view_parameters.dateFilter, 0 )}     
+     $dateFilter = cond( and( $params.useDateFilter, is_set( $view_parameters.dateFilter ), $view_parameters.dateFilter|gt( 0 ), $view_parameters.dateFilter|lt( 6 ) ), $view_parameters.dateFilter, 0 )}
 {* @TODO *}
 {def $filters = array()
      $query = ''
-     $page_limit = 1}    
+     $page_limit = 1}
 
 {* controllo nei view_parameters se ci sono filtri attivi selezionati dalle faccette *}
 
@@ -30,7 +30,7 @@
         {* preparo le faccette in forma di stringa ("subattr__test_t;Test;10") *}
         {set $facetStringArray = $facetStringArray|append( concat( $value.field, ';', $value.name, ';', $value.limit ) )}
         {def $name = $value.name|urlencode }
-        {if and( is_set( $view_parameters.$name ), $view_parameters.$name|ne( '' ) )}    
+        {if and( is_set( $view_parameters.$name ), $view_parameters.$name|ne( '' ) )}
             {set $filters = $filters|append( concat( $value.field, ':', $view_parameters.$name|urldecode ) )}
         {/if}
         {undef $name}
@@ -47,7 +47,7 @@
 {/if}
 
 {* controllo i view_parameters per il sort: se non c'è lo applico (non lo converto in hash perché in questa fetch non mi serve, serve per il js e per l'uristring) *}
-{if and( $sortString, is_set( $view_parameters.sort )|not() )}    
+{if and( $sortString, is_set( $view_parameters.sort )|not() )}
     {set $view_parameters = $view_parameters|merge( hash( 'sort', $sortString, 'forceSort', $forceSort ) )}
 {/if}
 
@@ -77,7 +77,7 @@
 {* inizializzo ajax *}
 <script type="text/javascript">
 //<![CDATA[
-$(function() {ldelim}  
+$(function() {ldelim}
     var options =
     {ldelim}
         baseurl: "{$node.url_alias|ezurl( no, full )}",
@@ -85,9 +85,9 @@ $(function() {ldelim}
         subtree: "{$subtree|implode('::')}",
         defaultFilters: '{$default_filters|implode(';')}',
         facets: "{$facetStringArray|implode( '::' )}",
-        classes: "{$classes|implode('::')}",        
-        sort: "{$sortString}",        
-        useDateFilter: "{$params.useDateFilter|int()}",        
+        classes: "{$classes|implode('::')}",
+        sort: "{$sortString}",
+        useDateFilter: "{$params.useDateFilter|int()}",
         forceSort: "{$forceSort}"
     {rdelim};
     $.folderFacets( options );
@@ -101,13 +101,13 @@ $(function() {ldelim}
 <div class="border-ml"><div class="border-mr"><div class="border-mc">
 
     <h4><a href={$node.url_alias|ezurl}>{$node.name|wash()}</a></h4>
-    
+
     <div class="block no-js-hide queryContainer">
-        <label for="query">Ricerca libera:</label>
+        <label for="query">{'Search text'|i18n('extension/ocsearchtools')}:</label>
         <input class="box" size="30" name="query" id="query" />
-        <span id="clearSearch" style="display:none">x</span> 
+        <span id="clearSearch" style="display:none">x</span>
     </div>
-    
+
     <div id="select">
     <input type="hidden" name="hiddenOptions" id="hiddenOptions" value='{$viewParametersString|wash()}' />
         
@@ -119,14 +119,14 @@ $(function() {ldelim}
                 {set $dateString = concat( $dateString, '/(' , $key2, ')/', $value )}
             {/if}
         {/foreach}
-        
+
         {def $dateFilters = hash( 1, "Last day", 2, "Last week", 3, "Last month", 4, "Last three months", 5, "Last year" )}
-        
-        <ul class="menu-list"> 
-            <li><div><strong>{'Creation time'|i18n( 'extension/ezfind/facets' )}</strong></div>  
+
+        <ul class="menu-list">
+            <li><div><strong>{'Creation time'|i18n( 'extension/ezfind/facets' )}</strong></div>
             <ul class="submenu-list">
                 {if and( is_set( $view_parameters.dateFilter ), $view_parameters.dateFilter|gt( 0 ), $view_parameters.dateFilter|lt( 6 ) )}
-                    <li><div>                
+                    <li><div>
                         {set $dateString = $dateString|explode( concat( '/(dateFilter)/', $view_parameters.dateFilter ) )|implode( '' )
                              $dateStyle = 'current'}
                         <a class="helper" href={concat( $node.url_alias, $dateString )|ezurl()} title="Rimuovi filtro"><small>Rimuovi filtro</small></a>
@@ -140,17 +140,17 @@ $(function() {ldelim}
                     {/foreach}
                 {/if}
             </ul>
-        </li></ul> 
-    {/if}   
+        </li></ul>
+    {/if}
 
     {if and( $facets|count(), is_set( $search_extras.facet_fields ) )}
     {foreach $search_extras.facet_fields as $key => $facet}
         {def $name = $facets.$key.name|urlencode()}
-        <ul class="menu-list">        
+        <ul class="menu-list">
         {if $facet.nameList|count()|gt(0)}
-            <li><div><strong>{$facets.$key.name|explode( '_' )|implode( ' ' )|wash()}</strong></div>                
+            <li><div><strong>{$facets.$key.name|explode( '_' )|implode( ' ' )|wash()}</strong></div>
                 <ul class="submenu-list">
-                    {foreach $facet.nameList as $clean => $dash }                        
+                    {foreach $facet.nameList as $clean => $dash }
                         {def $currentstring = concat( '/(' , $name, ')/', $dash|urlencode() )
                              $uristring = $currentstring
                              $style = array()
@@ -163,22 +163,22 @@ $(function() {ldelim}
                                      $current = true()}
                             {/if}
                         {/foreach}
-                        
+
                         <li>
-                            <div>                                
+                            <div>
                                 {if $current}
                                     {set $uristring = ''}
                                     {foreach $view_parameters as $key2 => $value}
                                         {if and( $value|ne(''), $key2|ne( $name ), $key2|ne( 'offset' ) )}
-                                            {set $uristring = concat( $uristring, '/(' , $key2, ')/', $value )}                                        
+                                            {set $uristring = concat( $uristring, '/(' , $key2, ')/', $value )}
                                         {/if}
                                     {/foreach}
                                     <a class="helper" href={concat( $node.url_alias, $uristring )|ezurl()} title="Rimuovi filtro"><small>Rimuovi filtro</small></a>
-                                {/if}                                
+                                {/if}
                                 <a {if $style|count()}class="{$style|implode( ' ' )}"{/if} href={concat( $node.url_alias, $uristring )|ezurl()}>
                                     {def $calcolate_name = false()}
                                     {if is_numeric( $clean )}
-                                        {set $calcolate_name = true()}        
+                                        {set $calcolate_name = true()}
                                     {/if}
                                     {if $calcolate_name}
                                         {if $facets.$key.field|eq( 'meta_main_parent_node_id_si' )}
@@ -186,7 +186,7 @@ $(function() {ldelim}
                                         {else}
                                         {fetch( 'content', 'object', hash( 'object_id', $clean ) ).name|wash()|explode( '(')|implode( ' (' )|explode( ',')|implode( ', ' )}
                                         {/if}
-                                    {else}    
+                                    {else}
                                         {$clean|wash()|explode( '(')|implode( ' (' )|explode( ',')|implode( ', ' )}
                                     {/if}
                                     ({$search_extras.facet_fields.$key.countList[$clean]})
@@ -194,11 +194,11 @@ $(function() {ldelim}
                                 </a>
                             </div>
                         </li>
-                        
+
                         {undef $uristring $style $current $currentstring}
                     {/foreach}
                 </ul>
-            </li>            
+            </li>
         {/if}
         </ul>
         {undef $name}

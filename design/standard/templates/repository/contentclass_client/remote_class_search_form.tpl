@@ -22,5 +22,5 @@
   
   <input type="hidden" name="class_id" value="{$remote_class_id|wash()}" />
   
-  <button class="defaultbutton" type="submit">{'Search'|i18n('extension/opencontent')}</button>
+  <button class="defaultbutton" type="submit">{'Search'|i18n('design/ezwebin/content/advancedsearch')}</button>
 </form>

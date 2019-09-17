@@ -8,7 +8,7 @@ class OCClassSearchFormPublishedField extends OCClassSearchFormField
     {        
         $this->currentClassId = $currentClassId;
         $this->attributes = array(            
-            'label' => ezpI18n::tr( 'extension/ocsearchtools', 'Periodo di pubblicazione' ),
+            'label' => ezpI18n::tr( 'extension/ocsearchtools', 'Publication range' ),
             'name' => 'publish_date',
             'id' => 'publish_date',
             'value' => OCClassSearchFormHelper::result()->requestField( 'publish_date' )
