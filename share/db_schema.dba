@@ -1,0 +1,59 @@
+<?php
+// This array contains the database schema
+$schema = array (
+  'occlassextraparameters' => 
+  array (
+    'name' => 'occlassextraparameters',
+    'fields' => 
+    array (
+      'attribute_identifier' => 
+      array (
+        'length' => 100,
+        'type' => 'varchar',
+        'not_null' => '1',
+        'default' => '',
+      ),
+      'class_identifier' => 
+      array (
+        'length' => 100,
+        'type' => 'varchar',
+        'not_null' => '1',
+        'default' => '',
+      ),
+      'created_time' => 
+      array (
+        'length' => 11,
+        'type' => 'int',
+        'default' => 0,
+      ),
+      'handler' => 
+      array (
+        'length' => 100,
+        'type' => 'varchar',
+        'not_null' => '1',
+        'default' => '',
+      ),
+      'key' => 
+      array (
+        'length' => 100,
+        'type' => 'varchar',
+        'not_null' => '1',
+        'default' => '',
+      ),
+      'value' => 
+      array (
+        'type' => 'longtext',
+        'default' => false,
+      ),
+    ),
+    'indexes' => 
+    array (
+    ),
+  ),
+  '_info' => 
+  array (
+    'format' => 'generic',
+  ),
+);
+
+?>
