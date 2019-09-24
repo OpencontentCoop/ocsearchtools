@@ -93,7 +93,7 @@
     {foreach $search_extras.facet_fields as $key => $facet}
         {def $name = $facets.$key.name|urlencode()}
         <ul class="menu-list">
-        <input type="hidden" name="hiddenOptions" id="hiddenOptions" value='{$viewParametersString}'' />
+        <input type="hidden" name="hiddenOptions" id="hiddenOptions" value='{$viewParametersString|wash()}'' />
         {if $facet.nameList|count()|gt(0)}
             <li><div><strong>{$facets.$key.name|explode( '_' )|implode( ' ' )|wash()}</strong></div>                
                 <ul class="submenu-list">

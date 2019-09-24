@@ -21,7 +21,7 @@
                             <label>
                                 <input name="tematica{$i}" 
                                        type="checkbox" 
-                                       value="{$tag.id};{$tag.keyword};{$tag.parent_id}">
+                                       value="{$tag.id|wash()};{$tag.keyword|wash()};{$tag.parent_id|wash()}">
                                 {$tag.keyword}
                             </label>
                         </div>

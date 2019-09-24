@@ -3,7 +3,7 @@
   <select class="form-control" name="{$input_name}" id="{$id}">
 	<option value=""></option>
 	{foreach $values as $value}	  
-	  <option value="{$value.query}" {if $value.active}selected="selected"{/if}>{$value.name}</option>
+	  <option value="{$value.query|wash()}" {if $value.active}selected="selected"{/if}>{$value.name|wash()}</option>
 	{/foreach}
   </select>
 </div>

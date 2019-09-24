@@ -4,7 +4,7 @@
   {foreach $values as $value}
 	<div class="radio">
 	  <label>
-		<input type="radio" class="form-control" name="{$input_name}" id="{$id}" {if $value.active}checked="checked"{/if} value="{$value.query}" />
+		<input type="radio" class="form-control" name="{$input_name}" id="{$id}" {if $value.active}checked="checked"{/if} value="{$value.query|wash()}" />
 		{$value.name}
 	  </label>
 	</div>

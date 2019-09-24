@@ -10,7 +10,7 @@
         </label>
         <select name="handler" id="handler">
             {foreach $extra_handlers as $identifier => $item}
-                <option value="{$item.identifier}" {if $item.identifier|eq($handler.identifier)}selected="selected"{/if}>{$item.name|wash()}</option>
+                <option value="{$item.identifier|wash()}" {if $item.identifier|eq($handler.identifier)}selected="selected"{/if}>{$item.name|wash()}</option>
             {/foreach}
         </select>
 
@@ -20,7 +20,7 @@
         </label>
         <select name="class" id="class">
         {foreach $classList as $classItem}
-            <option value="{$classItem.identifier}" {if $class.identifier|eq($classItem.identifier)}selected="selected"{/if}>{$classItem.name|wash()}</option>
+            <option value="{$classItem.identifier|wash()}" {if $class.identifier|eq($classItem.identifier)}selected="selected"{/if}>{$classItem.name|wash()}</option>
         {/foreach}
         </select>
         <button type="submit" class="defaultbutton btn btn-info btn-sm">Seleziona</button>

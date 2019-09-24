@@ -17,7 +17,7 @@
   {include uri='design:class_search_form/publish_date.tpl' helper=$helper input=$helper.published_field}
 
   {foreach $parameters as $key => $value}
-	<input type="hidden" name="{$key}" value="{$value}" />
+	<input type="hidden" name="{$key}" value="{$value|wash()}" />
   {/foreach}
   
   <input type="hidden" name="class_id" value="{$helper.class.id}" />  

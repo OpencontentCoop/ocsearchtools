@@ -17,7 +17,7 @@
                 <form action={concat('classtools/compare/', $request_id)|ezurl()} method="post">
                     <input type="hidden" name="remote" value="{$remote_request|wash()}" />
                     <div class="text-center">
-                        <input type="submit" name="InstallButton" value="Installa classe {$request_id}"
+                        <input type="submit" name="InstallButton" value="Installa classe {$request_id|wash()}"
                                class="defaultbutton btn btn-lg mt-4 mb-4"/>
                     </div>
                 </form>
@@ -97,7 +97,7 @@
                             {if array('class_group')|contains($item.field_name)|not()}
                                 <form action={concat('classtools/compare/', $locale.identifier)ezurl()} method="post">
                                     <input type="hidden" name="remote" value="{$remote_request|wash()}" />
-                                    <input type="hidden" name="SyncPropertyIdentifier" value="{$item.field_name}" />
+                                    <input type="hidden" name="SyncPropertyIdentifier" value="{$item.field_name|wash()}" />
                                     <button class="defaultbutton btn btn-primary" type="submit" name="SyncPropertyButton"><i class="fa fa-exchange"></i> <span class="sr-only">Sincronizza</span></button>
                                 </form>
                             {/if}
@@ -126,7 +126,7 @@
                         <td style="vertical-align: middle">
                             <form action={concat('classtools/compare/', $locale.identifier)ezurl()} method="post">
                                 <input type="hidden" name="remote" value="{$remote_request|wash()}" />
-                                <input type="hidden" name="AddAttributeIdentifier" value="{$item.Identifier}" />
+                                <input type="hidden" name="AddAttributeIdentifier" value="{$item.Identifier|wash()}" />
                                 <button class="defaultbutton btn btn-primary" type="submit" name="AddAttributeButton"><i class="fa fa-plus"></i> <span class="sr-only">Aggiungi</span></button>
                             </form>
                         </td>
@@ -172,7 +172,7 @@
                                 {if array('placement', 'data_type_string')|contains($item.field_name)|not()}
                                     <form action={concat('classtools/compare/', $locale.identifier)ezurl()} method="post">
                                         <input type="hidden" name="remote" value="{$remote_request|wash()}" />
-                                        <input type="hidden" name="SyncAttributeIdentifier" value="{$identifier}/{$item.field_name}" />
+                                        <input type="hidden" name="SyncAttributeIdentifier" value="{$identifier|wash()}/{$item.field_name|wash()}" />
                                         <button class="defaultbutton btn btn-primary" type="submit" name="SyncAttributeButton"><i class="fa fa-exchange"></i> <span class="sr-only">Sincronizza</span></button>
                                     </form>
                                 {/if}
@@ -206,7 +206,7 @@
                         <td>
                             <form action={concat('classtools/compare/', $locale.identifier)ezurl()} method="post">
                                 <input type="hidden" name="remote" value="{$remote_request|wash()}" />
-                                <input type="hidden" name="RemoveAttributeIdentifier" value="{$item.Identifier}" />
+                                <input type="hidden" name="RemoveAttributeIdentifier" value="{$item.Identifier|wash()}" />
                                 <button class="defaultbutton btn btn-primary" type="submit" name="RemoveAttributeButton"><i class="fa fa-minus"></i> <span class="sr-only">Rimuovi</span></button>
                             </form>
                         </td>

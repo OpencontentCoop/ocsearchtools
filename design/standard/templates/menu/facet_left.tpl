@@ -109,7 +109,7 @@ $(function() {ldelim}
     </div>
     
     <div id="select">
-    <input type="hidden" name="hiddenOptions" id="hiddenOptions" value='{$viewParametersString}' />
+    <input type="hidden" name="hiddenOptions" id="hiddenOptions" value='{$viewParametersString|wash()}' />
         
     {if $params.useDateFilter}    
         {def $dateString = ''

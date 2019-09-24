@@ -30,7 +30,7 @@
 <form class="calendar-tools" method='GET' action={concat('calendar/view/', $node.node_id)|ezurl}>
 <input type='hidden' name="UrlAlias" value="{$node.url_alias}" />
 <input type='hidden' name="View" value="calendar" />
-<input type="hidden" name="SearchDate" value="{$calendarData.parameters.picker_date}" />
+<input type="hidden" name="SearchDate" value="{$calendarData.parameters.picker_date|wash()}" />
 
 <div class="navigation-calendar hidden-xs pull-right">
 <div class="btn-group">

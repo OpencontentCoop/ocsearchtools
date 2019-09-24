@@ -17,10 +17,10 @@
   {include uri='design:class_search_form/publish_date.tpl' client=$client input=$client.published_field*}
 
   {foreach $parameters as $key => $value}
-	<input type="hidden" name="{$key}" value="{$value}" />
+	<input type="hidden" name="{$key}" value="{$value|wash()}" />
   {/foreach}
   
-  <input type="hidden" name="class_id" value="{$remote_class_id}" />  
+  <input type="hidden" name="class_id" value="{$remote_class_id|wash()}" />
   
   <button class="defaultbutton" type="submit">{'Search'|i18n('extension/opencontent')}</button>
 </form>

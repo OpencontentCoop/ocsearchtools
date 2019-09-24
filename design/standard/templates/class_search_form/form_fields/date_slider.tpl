@@ -7,7 +7,7 @@
       <small class="event-end"><strong>a </strong><span></span></small>
     </p>
   </div>
-  <input id="data-{$id}" type="hidden" name="{$input_name}" value="{$value|wash()}" />
+  <input id="data-{$id}" type="hidden" name="{$input_name|wash()}" value="{$value|wash()}" />
   {ezscript_require( array( 'ezjsc::jquery', 'ezjsc::jqueryUI', 'plugins/noUiSlider/jquery.nouislider.all.js' ) )}
   {ezcss_require(array('plugins/noUiSlider/jquery.nouislider.min.css'))}
   <script type="text/javascript">
