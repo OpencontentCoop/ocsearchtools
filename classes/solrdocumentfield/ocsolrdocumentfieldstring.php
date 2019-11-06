@@ -68,12 +68,22 @@ class ocSolrDocumentFieldString extends ezfSolrDocumentFieldBase
             $fields[$fieldName] = $this->preProcessValue( $this->getFirstAlpha( $metaData ),
                                                           self::getClassAttributeType( $contentClassAttribute ) );
         }
-        
+
+        $documentFieldName = new ezfSolrDocumentFieldName();
+        $fieldName = $documentFieldName->lookupSchemaName(
+            parent::SUBATTR_FIELD_PREFIX . $contentClassAttribute->attribute( 'identifier' ) . parent::SUBATTR_FIELD_SEPARATOR . 'normalized', 'string'
+        );
+        $fields[$fieldName] = $this->preProcessValue(
+            eZCharTransform::instance()->transformByGroup( $metaData, 'identifier' ),
+            self::getClassAttributeType( $contentClassAttribute )
+        );
+
         return $fields;
     }
     
     protected function getFirstAlpha( $string )
     {
+        $string = eZCharTransform::instance()->transformByGroup( $string, 'identifier' );
         $first = '';
         $letters = str_split( $string );
         foreach( $letters as $letter )
@@ -87,5 +97,3 @@ class ocSolrDocumentFieldString extends ezfSolrDocumentFieldBase
         return $first;
     }
 }
-
-?>
