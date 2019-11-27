@@ -7,7 +7,7 @@ class OCClassSearchFormQueryField extends OCClassSearchFormField
     {
         $this->attributes = array(
             'query' => OCClassSearchFormHelper::result()->requestField( 'query' ),
-            'label' => ezpI18n::tr( 'extension/ocsearchtools', 'Ricerca libera' ),
+            'label' => ezpI18n::tr( 'extension/ocsearchtools', 'Search text' ),
             'name' => 'query',
             'id' => 'query'
         );
