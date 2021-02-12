@@ -13,9 +13,9 @@ PolicyOmitList[]=datatable/view
 PolicyOmitList[]=classtools/definition
 PolicyOmitList[]=classtools/extra_definition
 
-[Cache]
-CacheItems[]=calendartaxonomy
-CacheItems[]=calendarquery
+#[Cache]
+#CacheItems[]=calendartaxonomy
+#CacheItems[]=calendarquery
 
 [Cache_calendartaxonomy]
 name=Calendar taxonomy cache
