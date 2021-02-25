@@ -9,28 +9,37 @@ $script = eZScript::instance( array( 'description' => ( "Reindicizza\n\n" ),
 
 $script->startup();
 
-$options = $script->getOptions( '[class:]',
+$options = $script->getOptions( '[class:][clean]',
                                 '',
-                                array( 'class'  => 'Identificatore della classe' )
+                                array(
+                                  'class' => 'Identificatore della classe',
+                                  'clean' =>  "Rimuove tutti i dati di ricerca della classe prima di iniziare l'indicizzazione "
+                                )
 );
 $script->initialize();
 $script->setUseDebugAccumulators( true );
 
 try
 {
-    if ( isset( $options['class'] ) )
-    {
+
+    if ( isset( $options['class'] ) ) {
         $classIdentifier = $options['class'];
-    }
-    else
-    {
+    } else {
         throw new Exception( "Specificare la classe" );
     }
     
     $class = eZContentClass::fetchByIdentifier( $classIdentifier );
-    if ( !$class instanceof eZContentClass )
-    {
+    if ( !$class instanceof eZContentClass ) {
         throw new Exception( "Classe $classIdentifier non trovata" );
+    }
+
+    $cleanupSearch = $options['clean'] ? true : false;
+    if ( $cleanupSearch ) {
+      $cli->output( "Inizio rimozzione indicizzazione classe: " . $classIdentifier, false );
+      $Solr = new eZSolrBase();
+      $deleteQuery = ezfSolrDocumentFieldBase::generateMetaFieldName( 'installation_id' ) . ':' . eZSolr::installationID();
+      $deleteQuery .= ' AND meta_class_identifier_ms:' . $classIdentifier;
+      $Solr->deleteDocs( array(), $deleteQuery, true );
     }
     
     $objects = eZPersistentObject::fetchObjectList( eZContentObject::definition(),
