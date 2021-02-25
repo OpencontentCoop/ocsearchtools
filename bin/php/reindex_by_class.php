@@ -35,7 +35,7 @@ try
 
     $cleanupSearch = $options['clean'] ? true : false;
     if ( $cleanupSearch ) {
-      $cli->output( "Inizio rimozzione indicizzazione classe: " . $classIdentifier, false );
+      $cli->output( "Inizio rimozzione indicizzazione classe: " . $classIdentifier);
       $Solr = new eZSolrBase();
       $deleteQuery = ezfSolrDocumentFieldBase::generateMetaFieldName( 'installation_id' ) . ':' . eZSolr::installationID();
       $deleteQuery .= ' AND meta_class_identifier_ms:' . $classIdentifier;
