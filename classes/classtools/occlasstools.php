@@ -780,14 +780,14 @@ class OCClassTools
         $removeGroupIdList = array();
         foreach ($localGroups as $group) {
             if (!in_array($group->attribute('group_name'), $remoteGroups)){
-                $removeGroupIdList[] = $group->attribute('id');
+                $removeGroupIdList[] = (int)$group->attribute('id');
             }
         }
 
         if (!empty($removeGroupIdList)) {
             eZClassFunctions::removeGroup(
-                $this->getLocale()->attribute('id'),
-                $this->getLocale()->attribute('version'),
+                (int)$this->getLocale()->attribute('id'),
+                (int)$this->getLocale()->attribute('version'),
                 $removeGroupIdList
             );
         }
