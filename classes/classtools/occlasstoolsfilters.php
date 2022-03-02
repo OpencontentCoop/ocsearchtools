@@ -90,14 +90,17 @@ class OCClassToolsFilters
         self::$remoteLocaleTagsMap[$remoteProperty] = false;
 
         try {
-            $client = new OCClassToolsFiltersTagClient(self::getRemoteHost());
-            $remoteTag = $client->readTag($remoteProperty);
-            if (isset($remoteTag['keyword'])) {
-                $tags = eZTagsObject::fetchByKeyword($remoteTag['keyword']);
-                if (isset($tags[0]) && $tags[0] instanceof eZTagsObject) {
-                    self::$remoteLocaleTagsMap[$remoteProperty] = $tags[0];
-                } else {
-                    eZDebug::writeError($remoteTag['keyword'], 'Tag locale non trovato');
+            $host = self::getRemoteHost();
+            if ($host) {
+                $client = new OCClassToolsFiltersTagClient($host);
+                $remoteTag = $client->readTag($remoteProperty);
+                if (isset($remoteTag['keyword'])) {
+                    $tags = eZTagsObject::fetchByKeyword($remoteTag['keyword']);
+                    if (isset($tags[0]) && $tags[0] instanceof eZTagsObject) {
+                        self::$remoteLocaleTagsMap[$remoteProperty] = $tags[0];
+                    } else {
+                        eZDebug::writeError($remoteTag['keyword'], 'Tag locale non trovato');
+                    }
                 }
             }
         } catch (Exception $e) {
@@ -123,17 +126,20 @@ class OCClassToolsFilters
         }
 
         try {
-            $client = new HttpClient(self::getRemoteHost());
-            $remoteNode = $client->browse($remoteNodeId);
-            if (isset($remoteNode['nodeRemoteId'])) {
-                $localeNode = eZContentObjectTreeNode::fetchByRemoteID($remoteNode['nodeRemoteId']);
-                if ($localeNode instanceof eZContentObjectTreeNode) {
-                    $classAttributeContent['default_placement']["node_id"] = $localeNode->attribute('node_id');
-                    $doc = eZObjectRelationListType::createClassDOMDocument($classAttributeContent);
-                    $docText = eZObjectRelationListType::domString( $doc );
-                    self::$remoteLocaleClassAttributeDataMap[$remoteProperty] = $docText;
-                } else {
-                    eZDebug::writeError($remoteNode['nodeRemoteId'], 'Nodo locale non trovato');
+            $host = self::getRemoteHost();
+            if ($host) {
+                $client = new HttpClient($host);
+                $remoteNode = $client->browse($remoteNodeId);
+                if (isset($remoteNode['nodeRemoteId'])) {
+                    $localeNode = eZContentObjectTreeNode::fetchByRemoteID($remoteNode['nodeRemoteId']);
+                    if ($localeNode instanceof eZContentObjectTreeNode) {
+                        $classAttributeContent['default_placement']["node_id"] = $localeNode->attribute('node_id');
+                        $doc = eZObjectRelationListType::createClassDOMDocument($classAttributeContent);
+                        $docText = eZObjectRelationListType::domString($doc);
+                        self::$remoteLocaleClassAttributeDataMap[$remoteProperty] = $docText;
+                    } else {
+                        eZDebug::writeError($remoteNode['nodeRemoteId'], 'Nodo locale non trovato');
+                    }
                 }
             }
         } catch (Exception $e) {
@@ -190,7 +196,7 @@ class OCClassToolsFilters
     private static function getRemoteHost()
     {
         $remoteUrl = parse_url(OCClassTools::getRemoteUrl());
-        return $remoteUrl['host'];
+        return isset($remoteUrl['host']) ? $remoteUrl['host'] : false;
     }
 }
 
