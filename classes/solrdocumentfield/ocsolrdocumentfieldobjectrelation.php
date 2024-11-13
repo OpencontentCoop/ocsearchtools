@@ -408,7 +408,7 @@ class ocSolrDocumentFieldObjectRelation extends ezfSolrDocumentFieldBase
                     /** @var eZContentObject $subContentObject */
                     $subContentObject = $subObject->attribute( 'contentobject' );
 
-                    if ( intval( $subContentObject->attribute( 'main_node_id' ) ) == 0 ){
+                    if ( !$subContentObject || intval( $subContentObject->attribute( 'main_node_id' ) ) == 0 ){
                         continue;
                     }
 
