@@ -59,6 +59,7 @@ class OCClassSearchFormDateFieldBounds implements OCClassSearchFormFieldBoundsIn
 
     public static function fromString( $string )
     {
+        // @phpstan-ignore new.static
         $data = new static();
         $values = explode( self::STRING_SEPARATOR, $string );
         if ( count( $values ) == 2 )

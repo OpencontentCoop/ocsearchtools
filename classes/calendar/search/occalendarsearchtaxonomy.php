@@ -28,6 +28,7 @@ class OCCalendarSearchTaxonomy
         );
 
         $cacheFile = eZClusterFileHandler::instance( $cacheFilePath );
+        // @phpstan-ignore property.notFound
         $this->data = $cacheFile->processCache(
             array( 'OCCalendarSearchTaxonomy', 'retrieveCache' ),
             array( 'OCCalendarSearchTaxonomy', 'generateCache' ),
@@ -39,11 +40,13 @@ class OCCalendarSearchTaxonomy
     
     public function getTree()
     {
+        // @phpstan-ignore property.notFound
         return $this->data;
     }
     
     public function getItem( $id )
     {
+        // @phpstan-ignore property.notFound
         foreach( $this->data as $item )
         {
             if ( $item['id'] == $id )

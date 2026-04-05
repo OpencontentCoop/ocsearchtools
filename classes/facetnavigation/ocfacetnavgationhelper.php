@@ -392,6 +392,7 @@ class OCFacetNavgationHelper
                 //),
                 ezpI18n::tr( "design/standard/content/search", "Last day" ) => array(
                     'name' => ezpI18n::tr( "design/standard/content/search", "Last day" ),
+                    // @phpstan-ignore variable.undefined
                     'url' =>  $activeSearchDate == "1" ? self::removeFromQueryUri( $queryUrl, $nameEncoded, $termEncoded, $baseUrl ) : self::addToQueryUri( $queryUrl, $nameEncoded, 1, $baseUrl ),
                     'active' =>  $activeSearchDate == "1" ? true : false,
                     'count' => false,
@@ -399,6 +400,7 @@ class OCFacetNavgationHelper
                 ),
                 ezpI18n::tr( "design/standard/content/search", "Last week" ) => array(
                     'name' => ezpI18n::tr( "design/standard/content/search", "Last week" ),
+                    // @phpstan-ignore variable.undefined
                     'url' =>  $activeSearchDate == "2" ? self::removeFromQueryUri( $queryUrl, $nameEncoded, $termEncoded, $baseUrl ) : self::addToQueryUri( $queryUrl, $nameEncoded, 2, $baseUrl ),
                     'active' =>  $activeSearchDate == "2" ? true : false,
                     'count' => false,
@@ -406,6 +408,7 @@ class OCFacetNavgationHelper
                 ),
                 ezpI18n::tr( "design/standard/content/search", "Last month" ) => array(
                     'name' => ezpI18n::tr( "design/standard/content/search", "Last month" ),
+                    // @phpstan-ignore variable.undefined
                     'url' =>  $activeSearchDate == "3" ? self::removeFromQueryUri( $queryUrl, $nameEncoded, $termEncoded, $baseUrl ) : self::addToQueryUri( $queryUrl, $nameEncoded, 3, $baseUrl ),
                     'active' =>  $activeSearchDate == "3" ? true : false,
                     'count' => false,

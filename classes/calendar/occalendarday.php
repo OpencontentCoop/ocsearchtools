@@ -29,10 +29,14 @@ class OCCalendarDay implements ArrayAccess
         }
         $dateTime->setTime( 0, 0, 0 );
         $this->day = $dateTime->format( 'j' );
+        // @phpstan-ignore property.notFound
         $this->shortDayName = $locale->shortDayName( $dateTime->format( 'w' ) );
+        // @phpstan-ignore property.notFound
         $this->longDayName = $locale->longDayName( $dateTime->format( 'w' ) );
         $this->month = $dateTime->format( 'n' );
+        // @phpstan-ignore property.notFound
         $this->longMonthName = $locale->longMonthName( $this->month );
+        // @phpstan-ignore property.notFound
         $this->shortMonthName = $locale->shortMonthName( $this->month );
         $this->year = $dateTime->format( 'Y' );
         $this->urlSuffix = "/(day)/{$this->day}/(month)/{$this->month}/(year)/{$this->year}";

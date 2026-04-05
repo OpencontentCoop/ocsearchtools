@@ -55,6 +55,7 @@ abstract class OCCalendarSearchContext implements OCCalendarSearchContextInterfa
         throw new Exception( "SearchContext class for $contextIdentifier not found" );
     }
 
+    /** @phpstan-ignore constructor.unusedParameter */
     protected function __construct( $contextIdentifier, $contextParameters = array() )
     {
         $this->contextIdentifier = $contextIdentifier;

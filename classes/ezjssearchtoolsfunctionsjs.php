@@ -25,6 +25,7 @@ class ezjsSearchToolsFunctionsJS extends ezjscServerFunctions
         
         $subtree = explode( '::', $http->postVariable( 'subtree', array() ) );
         
+        // @phpstan-ignore empty.variable
         if ( empty( $subtree ) )
         {
             $subtree = array( $nodeID );
