@@ -8,6 +8,7 @@ class ocSolrDocumentFieldInteger extends ezfSolrDocumentFieldBase
     public static function getFieldName( eZContentClassAttribute $classAttribute, $subAttribute = null, $context = 'search' )
     // @phpstan-ignore return.missing
     { 
+        // @phpstan-ignore return.missing
         switch ( $classAttribute->attribute( 'data_type_string' ) )
         {
             case 'ezinteger' :
