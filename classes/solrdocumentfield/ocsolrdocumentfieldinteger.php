@@ -6,6 +6,7 @@ class ocSolrDocumentFieldInteger extends ezfSolrDocumentFieldBase
     const DEFAULT_ATTRIBUTE_TYPE = 'sint';
     
     public static function getFieldName( eZContentClassAttribute $classAttribute, $subAttribute = null, $context = 'search' )
+    // @phpstan-ignore return.missing
     { 
         switch ( $classAttribute->attribute( 'data_type_string' ) )
         {
@@ -23,6 +24,7 @@ class ocSolrDocumentFieldInteger extends ezfSolrDocumentFieldBase
     {
         $contentClassAttribute = $this->ContentObjectAttribute->attribute( 'contentclass_attribute' );
         
+    // @phpstan-ignore return.missing
         switch ( $contentClassAttribute->attribute( 'data_type_string' ) )
         {   
             case 'ezinteger' :
