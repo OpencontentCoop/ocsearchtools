@@ -415,10 +415,27 @@ class OCClassTools
         }
 
         if (file_exists(self::$remoteUrl)) {
-            $data = file_get_contents(self::$remoteUrl);
+            $data = is_readable(self::$remoteUrl) ? file_get_contents(self::$remoteUrl) : false;
+            if ($data === false || trim($data) === '') {
+                throw new Exception(
+                    "File di definizione della classe $identifier non leggibile o vuoto: " . self::$remoteUrl
+                );
+            }
             $original = json_decode($data);
+            if ($original === null) {
+                throw new Exception(
+                    "File di definizione della classe $identifier non valido (" . json_last_error_msg() . "): "
+                    . self::$remoteUrl
+                );
+            }
 
             return $original;
+        }
+
+        if (!preg_match('#^https?://#i', self::$remoteUrl)) {
+            throw new Exception(
+                "File di definizione della classe $identifier non trovato: " . self::$remoteUrl
+            );
         }
 
         $remoteUrl = self::$remoteUrl;
